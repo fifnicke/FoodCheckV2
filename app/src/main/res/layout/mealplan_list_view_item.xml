@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:weightSum="100"
+    android:padding="10dp">
+
+    <ImageView
+        android:id="@+id/mealplanRecipeImage"
+        android:gravity="center"
+        android:textAlignment="center"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:src="@drawable/ic_menu_recipes"
+        android:layout_weight="66.6"
+        />
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="33.3">
+
+        <TextView
+            android:gravity="center"
+            android:text="Day"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:id="@+id/day"/>
+        <TextView
+            android:gravity="center"
+            android:text="RecipeName"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:id="@+id/recipeName"
+            android:layout_below="@id/day"/>
+    </LinearLayout>
+
+</LinearLayout>
