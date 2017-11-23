@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.database.DatabaseErrorHandler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -30,6 +31,8 @@ public class EditDataActivity extends AppCompatActivity {
         btnSave = (Button) findViewById(R.id.btnSave);
         btnDelete = (Button) findViewById(R.id.btnDelete);
         mDatabaseHelper = new DatabaseHelper(this);
+
+
 
         //get the intent extras
         Intent recivedIntent = getIntent();

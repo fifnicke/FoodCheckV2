@@ -2,6 +2,7 @@ package se.ju.students.svni1493.foodcheckv2;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +19,8 @@ public class MealPlanActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_meal_plan);
+
+
 
         Log.d(TAG, "OnCreate: Startred.");
         String[] testForIngredients = {"Korv", "Bröd", "Mjölk"};

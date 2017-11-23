@@ -23,7 +23,8 @@
         <activity android:name=".ShoppingListActivity" />
         <activity android:name=".RecipeDetailsActivity" />
         <activity android:name=".EditDataActivity" />
-        <activity android:name=".AddRecipeActivity"></activity>
+        <activity android:name=".AddRecipeActivity" />
+        <activity android:name=".MapActivity"></activity>
     </application>
 
 </manifest>

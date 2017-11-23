@@ -19,9 +19,14 @@
             android:icon="@drawable/ic_menu_shoppinglist"
             android:title="Shopping list" />
         <item
+            android:id="@+id/nav_maps"
+            android:icon="@drawable/ic_menu_my_location_black"
+            android:title="Nearby stores" />
+        <item
             android:id="@+id/nav_manage"
             android:icon="@drawable/ic_menu_manage"
             android:title="Tools" />
+
     </group>
 
     <item android:title="Communicate">
@@ -30,10 +35,6 @@
                 android:id="@+id/nav_share"
                 android:icon="@drawable/ic_menu_share"
                 android:title="Share" />
-            <item
-                android:id="@+id/nav_send"
-                android:icon="@drawable/ic_menu_send"
-                android:title="Send" />
         </menu>
     </item>
 

@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     tools:context="se.ju.students.svni1493.foodcheckv2.RecipeActivity">
 
+
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -17,13 +18,14 @@
             android:layout_width="wrap_content"
             android:id="@+id/btnRecipeAdd"
             android:text="Add"
-
+            android:layout_marginTop="78dp"
             />
         <Button
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
             android:id="@+id/btnSearch"
             android:text="SEARCH"
+            android:layout_marginTop="78dp"
             android:layout_toRightOf="@+id/btnRecipeAdd" />
     </RelativeLayout>
     <LinearLayout

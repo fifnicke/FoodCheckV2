@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -49,6 +50,8 @@ public class RecipeDetailsActivity extends AppCompatActivity {
         btnRecipeDetailsDelete = (Button) findViewById(R.id.btnRecipeDetailsDelete);
         recipeDetailsIngredientListView = (ListView) findViewById(R.id.recipeDetailsIngredientListView);
         mDatabaseHelper = new DatabaseHelper(this);
+
+
 
 
         //get the intent extras
