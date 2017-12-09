@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -18,25 +19,50 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.GenericTypeIndicator;
+import com.google.firebase.database.ValueEventListener;
+
 import java.sql.Array;
 import java.sql.Blob;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 public class RecipeDetailsActivity extends AppCompatActivity {
 
     public static final String TAG = "RecipeDetailsActivity";
-    DatabaseHelper mDatabaseHelper;
     Button btnRecipeDetailsCancel, btnRecipeDetailsEdit, btnRecipeDetailsDelete;
     ListView recipeDetailsIngredientListView;
     TextView recipeDetailsInstructions, recipeDetailsName;
     ImageView recipeDetailsImage;
 
     private String selectedName;
-    private int selectedID;
+    private String selectedID;
     private String instructions;
     private String ingredients;
     private Blob image;
     private String[] ingredientArray;
+
+    private FirebaseDatabase mFirebaseDatabase;
+    private FirebaseAuth mAuth;
+    private FirebaseAuth.AuthStateListener mAuthListener;
+    private DatabaseReference myRef;
+    private String userID;
+
+    List<IngredientItem> ingredientsItems;
+
+    private ArrayList<String> testList = new ArrayList<>();
+
+    private DatabaseReference listRef;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,20 +75,102 @@ public class RecipeDetailsActivity extends AppCompatActivity {
         btnRecipeDetailsCancel = (Button) findViewById(R.id.btnRecipeDetailsCancel);
         btnRecipeDetailsDelete = (Button) findViewById(R.id.btnRecipeDetailsDelete);
         recipeDetailsIngredientListView = (ListView) findViewById(R.id.recipeDetailsIngredientListView);
-        mDatabaseHelper = new DatabaseHelper(this);
+
+        mAuth = FirebaseAuth.getInstance();
+        mFirebaseDatabase = FirebaseDatabase.getInstance();
+        //myRef = mFirebaseDatabase.getReference();
+        FirebaseUser user = mAuth.getCurrentUser();
+        userID = user.getUid();
+
+        ingredientsItems = new ArrayList<>();
 
 
-
-
+        mAuthListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+                if (user == null) {
+                    // user auth state is changed - user is null
+                    // launch login activity
+                    startActivity(new Intent(RecipeDetailsActivity.this, LoginActivity.class));
+                    finish();
+                }
+            }
+        };
         //get the intent extras
         Intent recivedIntent = getIntent();
         //get itemId
-        selectedID = recivedIntent.getIntExtra("id", -1);// -1 is just the default value
+        selectedID = recivedIntent.getStringExtra("id");// -1 is just the default value
+        toastMessage(String.valueOf(selectedID));
         //get name
         selectedName = recivedIntent.getStringExtra("name");
+        toastMessage(selectedName);
+        myRef = FirebaseDatabase.getInstance().getReference("users/"+ userID +"/Recipes/" +selectedID+"" );
+        // Read from the database
+        myRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // This method is called once with the initial value and again
+                // whenever data at this location is updated.
+                Log.d(TAG, "There are: " + dataSnapshot.getChildrenCount()+ " items");
+                Meal meal = dataSnapshot.getValue(Meal.class);
+                recipeDetailsName.setText(meal.getMealName());
+                Glide.with(RecipeDetailsActivity.this).load(meal.getMealImageUrl()).into(recipeDetailsImage);
+                recipeDetailsInstructions.setText(meal.getMealInstructions());
+                //meals.clear();
 
-        updateInfo();
-        populateListView();
+               /* for(DataSnapshot mealSnapshot: dataSnapshot.getChildren()){
+                    Meal meal = mealSnapshot.getValue(Meal.class);
+                    //meals.add(meal);
+                }*/
+
+                //RecipeList recipeAdapter = new RecipeList(RecipeActivity.this, meals);
+                //recipeListView.setAdapter(recipeAdapter);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                // Failed to read value
+                Log.w(TAG, "Failed to read value.", error.toException());
+            }
+        });
+
+
+        final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, testList);
+        recipeDetailsIngredientListView.setAdapter(arrayAdapter);
+
+        // Read from the database
+        listRef = myRef.child("mealIngredients");
+        listRef.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+
+                String value = dataSnapshot.getValue(String.class);
+                testList.add(value);
+                arrayAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
 
         btnRecipeDetailsCancel.setOnClickListener(new View.OnClickListener(){
             public void onClick(View view){
@@ -72,7 +180,7 @@ public class RecipeDetailsActivity extends AppCompatActivity {
         btnRecipeDetailsDelete.setOnClickListener(new View.OnClickListener(){
             public void onClick(View view){
                 //write code for deletion of recipe
-                mDatabaseHelper.deleteMeal(selectedID,selectedName);
+                //mDatabaseHelper.deleteMeal(selectedID,selectedName);
                 finish();
             }
         });
@@ -84,13 +192,13 @@ public class RecipeDetailsActivity extends AppCompatActivity {
     }
 
     public void updateInfo(){
-        MealItem meal = mDatabaseHelper.getItem(selectedID);
+/*
         recipeDetailsName.setText(meal.getName());
         recipeDetailsInstructions.setText(meal.getIngredients());//gets instructions for some reason
         ingredients = meal.getInstructions();
         ingredientArray = convertStringToArray(ingredients);
         Bitmap convertImage = BitmapFactory.decodeByteArray(meal.getImage(), 0, meal.getImage().length);
-        recipeDetailsImage.setImageBitmap(convertImage);
+        recipeDetailsImage.setImageBitmap(convertImage);*/
     }
 
     private void populateListView() {

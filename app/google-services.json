@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "648062607125",
+    "firebase_url": "https://foodcheckproject.firebaseio.com",
+    "project_id": "foodcheckproject",
+    "storage_bucket": "foodcheckproject.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:648062607125:android:91beec49fcedb733",
+        "android_client_info": {
+          "package_name": "se.ju.students.svni1493.foodcheckv2"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "648062607125-rfjnnt24dir10n69igvoo2itn2q8ghoo.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "se.ju.students.svni1493.foodcheckv2",
+            "certificate_hash": "0fe588300b53977776e6cb521fb740161803a52e"
+          }
+        },
+        {
+          "client_id": "648062607125-du9073pccen7f2a1mabo6qemcjulgtn2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCmHntoeZZdFlqLT-jXed0uGHrcy46JXgg"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "648062607125-du9073pccen7f2a1mabo6qemcjulgtn2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

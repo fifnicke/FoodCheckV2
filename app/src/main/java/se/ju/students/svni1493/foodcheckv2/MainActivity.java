@@ -3,6 +3,7 @@ package se.ju.students.svni1493.foodcheckv2;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.util.Log;
@@ -18,8 +19,19 @@ import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class MainActivity extends AppCompatActivity
@@ -29,7 +41,14 @@ public class MainActivity extends AppCompatActivity
     public static final String TAG = "MainActivity";
     DatabaseHelper mDatabaseHelper;
     private ListView mListView;
+    TextView mUserText;
 
+    private FirebaseAuth mAuth;
+    private FirebaseAuth.AuthStateListener mAuthListener;
+    private DatabaseReference myRef;
+    private String userID;
+
+    List<ShoppingItem> shoppingItems;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,9 +57,15 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         mListView = (ListView) findViewById(R.id.shoppingListList);
-        mDatabaseHelper = new DatabaseHelper(this);
+        shoppingItems = new ArrayList<>();
 
 
+        mAuth = FirebaseAuth.getInstance();
+        //final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+        FirebaseUser user = mAuth.getCurrentUser();
+        userID = user.getUid();
+        myRef = FirebaseDatabase.getInstance().getReference("users/"+ userID +"/ShoppingList" );
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -48,9 +73,57 @@ public class MainActivity extends AppCompatActivity
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
+
+        //FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        toastMessage(user.getEmail().toString());
+
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        populateListView();
+        View headerView = navigationView.getHeaderView(0);
+        mUserText = (TextView)headerView.findViewById(R.id.userName);
+        mUserText.setText(user.getEmail());
+
+        mAuthListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+                if (user == null) {
+                    // user auth state is changed - user is null
+                    // launch login activity
+                    startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                    finish();
+                }
+            }
+        };
+
+        // Read from the database
+        myRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // This method is called once with the initial value and again
+                // whenever data at this location is updated.
+                Log.d(TAG, "There are: " + dataSnapshot.getChildrenCount()+ " items");
+
+                shoppingItems.clear();
+
+                for(DataSnapshot shoppingSnapshot: dataSnapshot.getChildren()){
+                    ShoppingItem shoppingItem = shoppingSnapshot.getValue(ShoppingItem.class);
+                    shoppingItems.add(shoppingItem);
+                }
+
+                ShoppingList shoppingAdapter = new ShoppingList(MainActivity.this, shoppingItems);
+                mListView.setAdapter(shoppingAdapter);
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                // Failed to read value
+                Log.w(TAG, "Failed to read value.", error.toException());
+            }
+        });
+
+
 
     }
 
@@ -58,7 +131,6 @@ public class MainActivity extends AppCompatActivity
     protected void onResume()
     {
         super.onResume();
-        populateListView();
     }
 
     @Override
@@ -120,13 +192,14 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_maps) {
             //start map activity
 
-            /*Intent intent = new Intent(this, ShoppingListActivity.class);
-            startActivity(intent);*/
+            Intent intent = new Intent(this, MapsActivity.class);
+            startActivity(intent);
 
         }
 
         else if (id == R.id.nav_manage) {
-            //extra for future stuff
+            Intent intent = new Intent(this, ToolsActivity.class);
+            startActivity(intent);
         } else if (id == R.id.nav_share) {
 
         }
@@ -135,19 +208,23 @@ public class MainActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-    private void populateListView() {
-        Log.d(TAG, "populateListView: Displaying data in the ListView.");
 
-        //get data and append to a list
-        Cursor data = mDatabaseHelper.getData();
-        ArrayList<String> listData = new ArrayList<>();
+    @Override
+    public void onStart() {
+        super.onStart();
+        mAuth.addAuthStateListener(mAuthListener);
+    }
 
-        while (data.moveToNext()) {
-            //get the value from the database in column 1 and add it to the ArrayList
-            listData.add(data.getString(1));
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (mAuthListener != null) {
+            mAuth.removeAuthStateListener(mAuthListener);
         }
-        //create a listadapter and set it
-        ListAdapter adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, listData);
-        mListView.setAdapter(adapter);
+    }
+
+    //toast
+    private void toastMessage(String message){
+        Toast.makeText(this,message,Toast.LENGTH_SHORT).show();
     }
 }

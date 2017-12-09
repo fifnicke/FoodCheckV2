@@ -34,8 +34,8 @@
         <Button
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
-            android:id="@+id/btnView"
-            android:text="View Data"
+            android:id="@+id/btnBack"
+            android:text="Back"
             android:layout_toRightOf="@+id/btnAdd" />
     </RelativeLayout>
     <LinearLayout

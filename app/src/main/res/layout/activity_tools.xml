@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="se.ju.students.svni1493.foodcheckv2.ToolsActivity"
+    android:fitsSystemWindows="true">
+
+    <ScrollView
+        android:id="@+id/scroll_tools_form"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorPrimaryDark">
+
+        <LinearLayout
+            android:id="@+id/linear_tools_form"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@color/colorPrimaryDark"
+            android:descendantFocusability="beforeDescendants"
+            android:focusableInTouchMode="true">
+            <ImageView
+                android:layout_width="@dimen/logo"
+                android:layout_height="@dimen/logo"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="30dp"
+                android:src="@mipmap/ic_launcher"/>
+
+            <EditText
+                android:id="@+id/tools_email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Email"
+                android:inputType="textEmailAddress"
+                android:maxLines="1"
+                android:singleLine="true"
+                android:textColor="@color/colorPrimaryDark"
+                android:background="#FFF"
+                android:layout_marginBottom="20dp"/>
+
+            <Button
+                android:id="@+id/tools_change_email"
+                style="?android:textAppearanceSmall"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Change email"
+                android:textStyle="bold"
+                android:background="@color/colorAccent"
+                android:textColor="#FFF"/>
+            <Button
+                android:id="@+id/tools_sign_out"
+                style="?android:textAppearanceSmall"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Sign out"
+                android:textStyle="bold"
+                android:background="@android:color/holo_red_light"
+                android:textColor="#FFF"/>
+            <Button
+                android:id="@+id/tools_back"
+                style="?android:textAppearanceSmall"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Back"
+                android:textStyle="bold"
+                android:background="@android:color/holo_green_light"
+                android:textColor="#FFF"/>
+            <ProgressBar
+                android:id="@+id/tools_progressBar"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center|bottom"
+                android:layout_marginBottom="20dp"
+                android:visibility="gone"/>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</android.support.constraint.ConstraintLayout>
