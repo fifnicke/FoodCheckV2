@@ -3,6 +3,7 @@ package se.ju.students.svni1493.foodcheckv2;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.database.Cursor;
+import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -28,15 +29,28 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.net.URL;
+import java.net.HttpURLConnection;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.json.JSONTokener;
 
 public class RecipeActivity extends AppCompatActivity {
 
     public static final String TAG = "RecipeActivity";
+    public static String searchWord = null;
     DatabaseHelper mDatabaseHelper;
     Button btnRecipeAdd, btnSearch;
     ListView recipeListView;
+    EditText searchBar;
 
     private FirebaseDatabase mFirebaseDatabase;
     private FirebaseAuth mAuth;
@@ -66,6 +80,7 @@ public class RecipeActivity extends AppCompatActivity {
         btnSearch = (Button) findViewById(R.id.btnSearch);
         //recipeListView = (ListView) findViewById(R.id.recipeListView);
         mDatabaseHelper = new DatabaseHelper(this);
+        searchBar = (EditText) findViewById(R.id.searchBar);
 
         meals = new ArrayList<>();
 
@@ -74,7 +89,7 @@ public class RecipeActivity extends AppCompatActivity {
         //myRef = mFirebaseDatabase.getReference();
         FirebaseUser user = mAuth.getCurrentUser();
         userID = user.getUid();
-        myRef = FirebaseDatabase.getInstance().getReference("users/"+ userID +"/Recipes" );
+        myRef = FirebaseDatabase.getInstance().getReference("users/" + userID + "/Recipes");
 
         //Test för recycleview med glide och skit
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
@@ -102,14 +117,18 @@ public class RecipeActivity extends AppCompatActivity {
             }
         };
 
-        btnRecipeAdd.setOnClickListener(new View.OnClickListener(){
-            public void onClick(View view){
+        btnRecipeAdd.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
                 startActivity(new Intent(RecipeActivity.this, AddRecipeActivity.class));
                 meals.clear();
             }
         });
-        btnSearch.setOnClickListener(new View.OnClickListener(){
-            public void onClick(View view){
+        btnSearch.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                searchWord = searchBar.getText().toString();
+                if (searchWord != null) {
+                    new getRecipes().execute();
+                }
                 /*
                Cursor data = mDatabaseHelper.getAllMealData();
                 if (data.getCount() == 0){
@@ -136,11 +155,11 @@ public class RecipeActivity extends AppCompatActivity {
                 // This method is called once with the initial value and again
                 // whenever data at this location is updated.
                 //progressDialog.dismiss();
-                Log.d(TAG, "There are: " + dataSnapshot.getChildrenCount()+ " items");
+                Log.d(TAG, "There are: " + dataSnapshot.getChildrenCount() + " items");
 
                 //shoppingItems.clear();
 
-                for(DataSnapshot mealSnapshot: dataSnapshot.getChildren()){
+                for (DataSnapshot mealSnapshot : dataSnapshot.getChildren()) {
                     Meal meal = mealSnapshot.getValue(Meal.class);
                     meals.add(meal);
                 }
@@ -217,8 +236,7 @@ public class RecipeActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onResume()
-    {
+    protected void onResume() {
         super.onResume();
     }
 
@@ -289,8 +307,78 @@ public class RecipeActivity extends AppCompatActivity {
     }
 
     //toast
-    private void toastMessage(String message){
-        Toast.makeText(this,message,Toast.LENGTH_SHORT).show();
+    private void toastMessage(String message) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+    }
+}
+    class Recipe
+    {
+        public String recipeName;
+        public ArrayList ingredients = new ArrayList<String>();
+        public String href;
+        public String imgURL;
+    }
+    class getRecipes extends AsyncTask<Void, Void, String>{
+        public String search = RecipeActivity.searchWord;
+        public String API_URL = "https://api.edamam.com/search?q=" + search + "&app_id=537abe49&app_key=354a93a038c88fe91d320861c43b78d3&from=0&to=3";
+        List<Recipe> recipes = new ArrayList<>();
+        private Exception exception;
+        protected void onPreExecute() {}
+
+
+        protected String doInBackground(Void... urls){
+            try {
+                URL url = new URL(API_URL);
+                HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+                try {
+                    BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
+                    StringBuilder stringBuilder = new StringBuilder();
+                    String line;
+                    while((line = bufferedReader.readLine())!= null){
+                        stringBuilder.append(line).append("\n");
+                    }
+                    bufferedReader.close();
+                    return stringBuilder.toString();
+                }
+                finally {
+                    urlConnection.disconnect();
+                }
+            }
+            catch (Exception e){
+                Log.e("ERROR", e.getMessage(), e);
+                return null;
+            }
+        }
+
+
+        protected void onPostExecute(String response) {
+            if(response == null){
+                response = "ERROR";
+            }
+            Log.i("info", response);
+            try {
+                JSONObject object = (JSONObject) new JSONTokener(response).nextValue();
+                JSONArray hits = object.getJSONArray("hits");
+
+                for(int i = 0; i < hits.length(); i++){
+                    JSONObject hitObject = hits.getJSONObject(i);
+                    JSONObject recipe = hitObject.getJSONObject("recipe");
+                    Recipe result = new Recipe();
+                    result.recipeName = (String) recipe.get("label");
+                    result.href = recipe.getString("url");
+                    result.imgURL = recipe.getString("image");
+                    JSONArray ingredients = recipe.getJSONArray("ingredientLines");
+                    if(ingredients != null){
+                        for(int j = 0; j< ingredients.length(); j++){
+                            result.ingredients.add(ingredients.getString(j));
+                        }
+                    }
+                    recipes.add(i, result);
+
+                }
+            }catch (JSONException j){
+                j.printStackTrace();
+            }
+        }
     }
 
-}

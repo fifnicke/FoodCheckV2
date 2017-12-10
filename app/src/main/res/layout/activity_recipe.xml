@@ -12,21 +12,41 @@
         android:layout_height="wrap_content"
         android:id="@+id/relativeLayoutRecipe1"
         android:layout_centerHorizontal="true"
+
         >
+        <EditText
+            android:id="@+id/searchBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Search for recipes"
+            android:textAlignment="center"/>
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="1.0">
+
         <Button
             android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
+            android:layout_width="0dip"
+            android:layout_weight=".5"
             android:id="@+id/btnRecipeAdd"
-            android:text="Add"
+            android:text="Add custom recipe"
             android:layout_marginTop="78dp"
+            android:layout_alignParentLeft="true"
+            android:textSize="12sp"
             />
         <Button
             android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
             android:id="@+id/btnSearch"
-            android:text="SEARCH"
+            android:text="SEARCH online"
             android:layout_marginTop="78dp"
-            android:layout_toRightOf="@+id/btnRecipeAdd" />
+            android:layout_toRightOf="@+id/btnRecipeAdd"
+            android:layout_alignParentRight="true"
+            android:layout_width="0dip"
+            android:textSize="12sp"
+            android:layout_weight=".5"/>
+        </LinearLayout>
     </RelativeLayout>
     <LinearLayout
         android:layout_height="wrap_content"
