@@ -12,7 +12,8 @@
         android:layout_height="match_parent">
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="#F0F0F0">
 
         <EditText
             android:textAlignment="center"
@@ -22,25 +23,38 @@
             android:ems="10"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="78dp"
-            android:id="@+id/addRecipeName"/>
+            android:id="@+id/addRecipeName"
+            android:hint="Add Recipe Title"
+            android:textColor="@color/colorPrimaryDark"
+            android:background="@drawable/shadow1"
+            />
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="180dp"
+            android:background="@drawable/shadow1"
+            android:id="@+id/imageLayout"
+            android:layout_below="@+id/addRecipeName">
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="150dp"
             android:id="@+id/addRecipeImage"
             android:src="@drawable/foodchecktestimage"
-            android:layout_below="@+id/addRecipeName"
+
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:layout_marginTop="18dp"
+
             />
+        </LinearLayout>
         <Button
             android:id="@+id/addRecipeImageButton"
-            android:layout_width="wrap_content"
+            android:layout_width="150dp"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/addRecipeImage"
+            android:layout_below="@+id/imageLayout"
             android:layout_centerHorizontal="true"
             android:text="Add image"
+            android:background="@drawable/button"
+            android:textColor="#fff"
             />
         <EditText
             android:layout_width="match_parent"
@@ -52,7 +66,12 @@
             android:gravity="top|left"
             android:scrollbars="vertical"
             android:id="@+id/addRecipeInstructions"
-            android:layout_below="@+id/addRecipeImageButton"/>
+            android:layout_below="@+id/addRecipeImageButton"
+            android:textColor="@color/colorPrimaryDark"
+            android:background="@drawable/shadow1"
+            android:hint="Add Instructions"
+            android:textAlignment="center"
+            />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -71,24 +90,34 @@
                     android:layout_height="wrap_content"
                     android:inputType="textPersonName"
                     android:ems="10"
-                    android:id="@+id/addIngredientText"/>
+                    android:id="@+id/addIngredientText"
+                    android:background="@drawable/shadow1"
+                    android:hint="Add ingredient"
+                    />
                 <Button
                     android:layout_height="wrap_content"
-                    android:layout_width="wrap_content"
+                    android:layout_width="150dp"
                     android:id="@+id/btnIngredientAdd"
                     android:text="Add Ingredient"
                     android:layout_below="@+id/addIngredientText"
+                    android:layout_centerHorizontal="true"
+                    android:background="@drawable/button"
+                    android:textColor="#fff"
                     />
             </RelativeLayout>
             <LinearLayout
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
+                android:layout_height="400dp"
+                android:layout_width="fill_parent"
                 android:orientation="vertical"
-                android:layout_below="@+id/relativeLayoutRecipeInstructions1">
+                android:layout_below="@+id/relativeLayoutRecipeInstructions1"
+                android:background="@drawable/shadow1"
+                >
                 <ListView
                     android:layout_width="match_parent"
-                    android:layout_height="150dp"
-                    android:id="@+id/ingredientListView"/>
+                    android:layout_height="match_parent"
+                    android:id="@+id/ingredientListView"
+
+                    />
             </LinearLayout>
         </LinearLayout>
 
@@ -101,19 +130,23 @@
 
 
             <Button
-                android:layout_width="wrap_content"
+                android:layout_width="150dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:text="CANCEL"
                 android:id="@+id/btnRecipeCancel"
-                android:layout_below="@+id/addRecipeInstructions"/>
+                android:layout_below="@+id/addRecipeInstructions"
+                android:background="@drawable/cancel_btn"
+                android:textColor="#fff"/>
             <Button
-                android:layout_width="wrap_content"
+                android:layout_width="150dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:text="SAVE"
                 android:layout_toRightOf="@+id/btnRecipeCancel"
-                android:id="@+id/btnRecipeSave"/>
+                android:id="@+id/btnRecipeSave"
+                android:background="@drawable/confirm_btn"
+                android:textColor="#fff"/>
 
         </LinearLayout>
     </RelativeLayout>
