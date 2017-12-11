@@ -71,7 +71,7 @@ public class SelectMealPlanActivity extends AppCompatActivity {
         Intent recivedIntent = getIntent();
         //get itemId
         day = recivedIntent.getStringExtra("day");// -1 is just the default value
-        toastMessage(day);
+        //toastMessage(day);
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         SharedPreferences.Editor editor = prefs.edit();
