@@ -13,6 +13,10 @@
         android:layout_below="@+id/linearSelectRecipe"
         android:background="@drawable/textview_border"
         android:layout_margin="10dp">
+        <EditText
+            android:id="@+id/selectRecipeSearch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
         <android.support.v7.widget.RecyclerView
             android:id="@+id/selectRecyclerView"
             android:layout_width="match_parent"

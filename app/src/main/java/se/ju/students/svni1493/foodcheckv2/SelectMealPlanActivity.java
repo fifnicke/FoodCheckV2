@@ -8,7 +8,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -34,6 +37,8 @@ public class SelectMealPlanActivity extends AppCompatActivity {
 
     //List<Meal> meals;
 
+    private EditText selectRecipeSearch;
+
     private static final String ITEM_ID = "se.ju.students.svni1493.foodcheckv2.itemid";
     private static final String ITEM_NAME = "se.ju.students.svni1493.foodcheckv2.itemname";
 
@@ -44,6 +49,7 @@ public class SelectMealPlanActivity extends AppCompatActivity {
     private List<Meal> meals;
 
     private String day;
+    private String enteredText = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +66,8 @@ public class SelectMealPlanActivity extends AppCompatActivity {
         myRef = FirebaseDatabase.getInstance().getReference("users/"+ userID +"/Recipes" );
 
         //Test för recycleview med glide och skit
+        selectRecipeSearch = (EditText) findViewById(R.id.selectRecipeSearch);
+
         recyclerView = (RecyclerView) findViewById(R.id.selectRecyclerView);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -107,8 +115,44 @@ public class SelectMealPlanActivity extends AppCompatActivity {
                     Meal meal = mealSnapshot.getValue(Meal.class);
                     meals.add(meal);
                 }
-                adapter = new RecyclerSelectMealAdapter(getApplicationContext(), meals);
-                recyclerView.setAdapter(adapter);
+
+                enteredText = selectRecipeSearch.getText().toString();
+                selectRecipeSearch.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                        // TODO Auto-generated method stub
+                    }
+
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                        // TODO Auto-generated method stub
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable s) {
+
+                        // filter your list from your input
+                        //String ssss = s.toString();
+                        List<Meal> temp = new ArrayList();
+                        for(Meal d: meals){
+                            //or use .equal(text) with you want equal match
+                            //use .toLowerCase() for better matches
+                            if(d.getMealName().contains(s)){
+                                temp.add(d);
+                            }
+                        }
+                        adapter = new RecyclerSelectMealAdapter(getApplicationContext(), temp);
+                        recyclerView.setAdapter(adapter);
+                        //you can use runnable postDelayed like 500 ms to delay search text
+                    }
+                });
+
+                if(enteredText.isEmpty()  ){
+                    adapter = new RecyclerSelectMealAdapter(getApplicationContext(), meals);
+                    recyclerView.setAdapter(adapter);
+                }
 
                 //ShoppingList shoppingAdapter = new ShoppingList(MealPlanActivity.this, shoppingItems);
                 //listView.setAdapter(shoppingAdapter);

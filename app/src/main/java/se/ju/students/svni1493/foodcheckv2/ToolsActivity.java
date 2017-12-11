@@ -62,8 +62,9 @@ public class ToolsActivity extends AppCompatActivity {
             public void onClick(View v) {
                 progressBar.setVisibility(View.VISIBLE);
                 hideSoftKeyBoard();
-                if (user != null && !mEmail.getText().toString().trim().equals("")) {
-                    user.updateEmail(mEmail.getText().toString().trim())
+                String enteredEmail = mEmail.getText().toString().trim();
+                if (user != null && !enteredEmail.equals("")) {
+                    user.updateEmail(enteredEmail)
                             .addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
