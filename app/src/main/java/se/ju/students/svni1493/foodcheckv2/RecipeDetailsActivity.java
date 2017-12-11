@@ -39,7 +39,8 @@ import java.util.Map;
 public class RecipeDetailsActivity extends AppCompatActivity {
 
     public static final String TAG = "RecipeDetailsActivity";
-    Button btnRecipeDetailsCancel, btnRecipeDetailsEdit, btnRecipeDetailsDelete;
+    Button btnRecipeDetailsCancel;
+            //btnRecipeDetailsEdit, btnRecipeDetailsDelete;
     ListView recipeDetailsIngredientListView;
     TextView recipeDetailsInstructions, recipeDetailsName;
     ImageView recipeDetailsImage;
@@ -71,9 +72,9 @@ public class RecipeDetailsActivity extends AppCompatActivity {
         recipeDetailsInstructions = (TextView) findViewById(R.id.recipeDetailsInstructions);
         recipeDetailsName = (TextView) findViewById(R.id.recipeDetailsName);
         recipeDetailsImage = (ImageView) findViewById(R.id.recipeDetailsImage);
-        btnRecipeDetailsEdit = (Button) findViewById(R.id.btnRecipeDetailsEdit);
+       // btnRecipeDetailsEdit = (Button) findViewById(R.id.btnRecipeDetailsEdit);
         btnRecipeDetailsCancel = (Button) findViewById(R.id.btnRecipeDetailsCancel);
-        btnRecipeDetailsDelete = (Button) findViewById(R.id.btnRecipeDetailsDelete);
+        //btnRecipeDetailsDelete = (Button) findViewById(R.id.btnRecipeDetailsDelete);
         recipeDetailsIngredientListView = (ListView) findViewById(R.id.recipeDetailsIngredientListView);
 
         mAuth = FirebaseAuth.getInstance();
@@ -180,18 +181,18 @@ public class RecipeDetailsActivity extends AppCompatActivity {
                 finish();
             }
         });
-        btnRecipeDetailsDelete.setOnClickListener(new View.OnClickListener(){
+       /* btnRecipeDetailsDelete.setOnClickListener(new View.OnClickListener(){
             public void onClick(View view){
                 //write code for deletion of recipe
                 //mDatabaseHelper.deleteMeal(selectedID,selectedName);
                 finish();
             }
-        });
-        btnRecipeDetailsEdit.setOnClickListener(new View.OnClickListener(){
+        });*/
+      /*  btnRecipeDetailsEdit.setOnClickListener(new View.OnClickListener(){
             public void onClick(View view){
                 //write code for editing of recipe
             }
-        });
+        });*/
     }
 
     public void updateInfo(){
