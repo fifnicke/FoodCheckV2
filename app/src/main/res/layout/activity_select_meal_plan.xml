@@ -12,11 +12,25 @@
         android:orientation="vertical"
         android:layout_below="@+id/linearSelectRecipe"
         android:background="@drawable/textview_border"
-        android:layout_margin="10dp">
+        >
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="40dip"
+            android:text="Select Meal"
+            android:background="#000"
+            android:textColor="#fff"
+            android:id="@+id/title"
+            android:textSize="20sp"
+            android:textAlignment="center"
+            />
         <EditText
             android:id="@+id/selectRecipeSearch"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:background="@drawable/shadowpurple"
+            android:hint="Type to filtrate"
+            android:textAlignment="center"
+            android:inputType="textCapSentences"/>
         <android.support.v7.widget.RecyclerView
             android:id="@+id/selectRecyclerView"
             android:layout_width="match_parent"

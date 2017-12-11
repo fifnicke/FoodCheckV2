@@ -112,7 +112,7 @@ public class RecipeActivity extends AppCompatActivity {
         btnSearch.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 searchWord = searchBar.getText().toString();
-                if (searchWord != null) {
+                if (!searchWord.equals("")) {
                     new getRecipes().execute();
                 }
             }

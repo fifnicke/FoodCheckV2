@@ -30,7 +30,8 @@
         android:hint="Add item"
         android:padding="20dp"
         android:maxLines="2"
-        android:layout_below="@id/titleShoppingList"/>
+        android:layout_below="@id/titleShoppingList"
+        android:inputType="textCapSentences"/>
 </RelativeLayout>
     <RelativeLayout
         android:layout_width="fill_parent"

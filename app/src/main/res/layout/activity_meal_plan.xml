@@ -40,7 +40,8 @@
                 android:clickable="true"
                 android:background="@drawable/shadowoutlineblue"
                 android:weightSum="1"
-                android:padding="0dip">
+                android:padding="0dip"
+                android:minHeight="100dp">
                 <TextView
                     android:id="@+id/mondayName"
                     android:layout_width="0dip"
@@ -52,6 +53,7 @@
                     android:textAlignment="viewStart"
                     android:textSize="20sp"
                     android:textColor="#000"
+                    android:maxLines="2"
                     />
                 <ImageView
                     android:id="@+id/mondayImage"

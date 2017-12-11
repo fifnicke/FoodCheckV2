@@ -28,7 +28,6 @@
             android:textAlignment="center"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="textPersonName"
             android:ems="10"
             android:layout_centerHorizontal="true"
             android:id="@+id/addRecipeName"
@@ -38,6 +37,7 @@
             android:layout_below="@id/title"
             android:padding="20dp"
             android:maxLines="2"
+            android:inputType="textCapSentences"
             />
         <TextView
             android:layout_width="match_parent"
@@ -90,7 +90,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:inputType="textMultiLine"
+            android:inputType="textMultiLine|textCapSentences"
             android:lines="5"
             android:maxLines="15"
             android:gravity="top|left"
@@ -126,7 +126,7 @@
                     android:textAlignment="center"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="textPersonName"
+                    android:inputType="textCapSentences"
                     android:ems="10"
                     android:id="@+id/addIngredientText"
                     android:background="@drawable/shadowpurple"
