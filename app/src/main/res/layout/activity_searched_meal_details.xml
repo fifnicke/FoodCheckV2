@@ -82,7 +82,8 @@
                 android:layout_below="@+id/searchedRecipeDetailsingredientsLabel"
                 android:id="@+id/searchedRecipeDetailsLinearLayout"
                 android:background="@drawable/shadow1"
-                android:layout_margin="5dp">
+                android:layout_margin="5dp"
+                android:padding="2dip">
                 <ListView
                     android:layout_width="match_parent"
                     android:layout_height="200dp"
@@ -94,14 +95,14 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
-                android:weightSum="9"
+                android:weightSum="1"
                 android:layout_below="@+id/searchedRecipeDetailsLinearLayout">
 
 
                 <Button
                     android:layout_width="0dip"
                     android:layout_height="wrap_content"
-                    android:layout_weight="3"
+                    android:layout_weight=".5"
                     android:layout_marginTop="10dp"
                     android:text="Back"
                     android:id="@+id/btnSearchedRecipieDetailsCancel"
@@ -112,7 +113,7 @@
                 <Button
                     android:layout_width="0dip"
                     android:layout_height="wrap_content"
-                    android:layout_weight="3"
+                    android:layout_weight=".5"
                     android:layout_marginTop="10dp"
                     android:text="Save"
                     android:layout_toRightOf="@+id/btnSearchedRecipieDetailsSave"
