@@ -50,7 +50,8 @@
         <activity android:name=".SignUpActivity" />
         <activity android:name=".ResetPasswordActivity" />
         <activity android:name=".ToolsActivity" />
-        <activity android:name=".SelectMealPlanActivity"></activity>
+        <activity android:name=".SelectMealPlanActivity" />
+        <activity android:name=".SearchedMealDetailsActivity"></activity>
     </application>
 
 </manifest>

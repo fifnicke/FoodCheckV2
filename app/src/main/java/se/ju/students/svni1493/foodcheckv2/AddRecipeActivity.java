@@ -319,10 +319,11 @@ public class AddRecipeActivity extends AppCompatActivity {
                     //String id = myRef.push().getKey();
                     String name = addRecipeName.getText().toString();
                     String instructions = addRecipeInstructions.getText().toString();
+                    String href = "www";
 
                     if(!TextUtils.isEmpty(name)){
 
-                        Meal meal = new Meal(id, name, instructions, arrayList, taskSnapshot.getDownloadUrl().toString(),day);
+                        Meal meal = new Meal(id, name, instructions, arrayList, taskSnapshot.getDownloadUrl().toString(),day, href);
                         myRef.child(id).setValue(meal);
                         addRecipeName.setText("");
                         toastMessage("Added "+ name + " to firebase!");
@@ -344,9 +345,10 @@ public class AddRecipeActivity extends AppCompatActivity {
                 String name = addRecipeName.getText().toString();
                 String instructions = addRecipeInstructions.getText().toString();
                 String day = "placeholderDay";
+                String href = "www";
                 if(!TextUtils.isEmpty(name)){
 
-                    Meal meal = new Meal(id, name, instructions, arrayList,selectedUrl, day);
+                    Meal meal = new Meal(id, name, instructions, arrayList,selectedUrl, day, href);
                     myRef.child(id).setValue(meal);
                     addRecipeName.setText("");
                     toastMessage("Added "+ name + " to firebase!");
@@ -372,10 +374,11 @@ public class AddRecipeActivity extends AppCompatActivity {
                         //String id = myRef.push().getKey();
                         String name = addRecipeName.getText().toString();
                         String instructions = addRecipeInstructions.getText().toString();
+                        String href = "www";
 
                         if(!TextUtils.isEmpty(name)){
 
-                            Meal meal = new Meal(id, name, instructions, arrayList, taskSnapshot.getDownloadUrl().toString(),day);
+                            Meal meal = new Meal(id, name, instructions, arrayList, taskSnapshot.getDownloadUrl().toString(),day, href);
                             myRef.child(id).setValue(meal);
                             addRecipeName.setText("");
                             toastMessage("Added "+ name + " to firebase!");

@@ -7,24 +7,30 @@ import java.util.List;
  */
 
 public class Meal {
-    private String mealId;
-    private String mealName;
-    private String mealInstructions;
-    private List<String> mealIngredients;
-    private String mealImageUrl;
-    private String day;
+    public String mealId;
+    public String mealName;
+    public String mealInstructions;
+    public List<String> mealIngredients;
+    public String mealImageUrl;
+    public String day;
+    public String hRef;
     //private String ingredients;
     //private byte[] image;
 
     public Meal(){
     }
-    public Meal(String mealId, String mealName, String mealInstructions, List<String> mealIngredients, String mealImageUrl, String day){
+    public Meal(String mealId, String mealName, String mealInstructions, List<String> mealIngredients, String mealImageUrl, String day, String hRef){
         this.mealId = mealId;
         this.mealName = mealName;
         this.mealInstructions = mealInstructions;
         this.mealIngredients = mealIngredients;
         this.mealImageUrl = mealImageUrl;
         this.day = day;
+        this.hRef = hRef;
+    }
+
+    public String gethRef() {
+        return hRef;
     }
 
     public String getMealId() {

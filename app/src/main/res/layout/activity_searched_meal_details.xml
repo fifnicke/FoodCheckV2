@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="se.ju.students.svni1493.foodcheckv2.SearchedMealDetailsActivity">
+
+
+    <ScrollView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            >
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="name"
+                android:textAlignment="center"
+                android:textSize="20dp"
+                android:id="@+id/searchedRecipeDetailsName"
+                android:paddingBottom="5dp"
+                android:textColor="#000"
+                />
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                android:id="@+id/searchedRecipeDetailsImage"
+                android:src="@drawable/foodchecktestimage"
+                android:layout_below="@+id/searchedRecipeDetailsName"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Instructions:"
+                android:textAlignment="center"
+                android:id="@+id/searchedRecipeDetailsinstructionslabel"
+                android:textSize="20sp"
+                android:padding="2dp"
+                android:ems="10"
+                android:textColor="#000"
+                android:layout_below="@id/searchedRecipeDetailsImage"
+                />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:text="Instructions"
+                android:lines="5"
+                android:maxLines="15"
+                android:gravity="center"
+                android:scrollbars="vertical"
+                android:id="@+id/searchedRecipeDetailsInstructions"
+                android:layout_below="@id/searchedRecipeDetailsinstructionslabel"
+                android:background="@drawable/shadow1"
+                android:layout_margin="5dp"
+                android:padding="2dp"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Ingredients:"
+                android:textAlignment="center"
+                android:id="@+id/searchedRecipeDetailsingredientsLabel"
+                android:textSize="20sp"
+                android:padding="2dp"
+                android:ems="10"
+                android:textColor="#000"
+                android:layout_below="@id/searchedRecipeDetailsInstructions" />
+
+
+            <LinearLayout
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:orientation="vertical"
+                android:layout_below="@+id/searchedRecipeDetailsingredientsLabel"
+                android:id="@+id/searchedRecipeDetailsLinearLayout"
+                android:background="@drawable/shadow1"
+                android:layout_margin="5dp">
+                <ListView
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:id="@+id/searchedRecipeDetailsIngredientListView"/>
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:weightSum="9"
+                android:layout_below="@+id/searchedRecipeDetailsLinearLayout">
+
+
+                <Button
+                    android:layout_width="0dip"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3"
+                    android:layout_marginTop="10dp"
+                    android:text="Back"
+                    android:id="@+id/btnSearchedRecipieDetailsCancel"
+                    android:layout_below="@+id/relativeLayoutRecipeDetails1"
+                    android:background="@drawable/button"
+                    android:textColor="#fff"/>
+
+                <Button
+                    android:layout_width="0dip"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3"
+                    android:layout_marginTop="10dp"
+                    android:text="Save"
+                    android:layout_toRightOf="@+id/btnSearchedRecipieDetailsSave"
+                    android:id="@+id/btnSearchedRecipieDetailsEdit"
+                    android:background="@drawable/confirm_btn"
+                    android:textColor="#fff"/>
+
+            </LinearLayout>
+        </RelativeLayout>
+
+
+    </ScrollView>
+
+</android.support.constraint.ConstraintLayout>
