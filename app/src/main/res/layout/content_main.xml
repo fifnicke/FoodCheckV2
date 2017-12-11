@@ -24,20 +24,33 @@
             android:layout_weight="3"
             android:textColor="#000"
             android:id="@+id/topLabel"/>
-
-        <TextView
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:layout_weight="4"
-            android:background="@drawable/shadow1"
-            android:gravity="top"
-            android:paddingBottom="20dp"
-            android:text="example meal"
-            android:textAlignment="center"
-            android:textSize="15sp"
+            android:id="@+id/dailyMealMain"
             android:layout_below="@+id/topLabel"
-            android:id="@+id/meal"/>
+            android:background="@drawable/shadow1"
+            android:clickable="true">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:layout_weight="4"
+
+                android:gravity="top"
+                android:paddingBottom="20dp"
+                android:text="example meal"
+                android:textAlignment="center"
+                android:textSize="15sp"
+                android:layout_below="@+id/topLabel"
+                android:id="@+id/meal"/>
+            <ImageView
+                android:id="@+id/dailyMealImage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/ic_launcher"/>
+        </LinearLayout>
+
 
         <TextView
             android:layout_width="match_parent"
@@ -47,7 +60,7 @@
             android:textSize="25sp"
             android:textColor="#000"
             android:id="@+id/shoppingListLabel"
-            android:layout_below="@id/meal"
+            android:layout_below="@id/dailyMealMain"
             />
         <LinearLayout
             android:layout_width="match_parent"

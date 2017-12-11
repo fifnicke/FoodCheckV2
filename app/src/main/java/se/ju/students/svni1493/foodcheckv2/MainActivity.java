@@ -17,11 +17,14 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -30,7 +33,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 
@@ -41,14 +47,21 @@ public class MainActivity extends AppCompatActivity
     public static final String TAG = "MainActivity";
     DatabaseHelper mDatabaseHelper;
     private ListView mListView;
-    TextView mUserText;
+    TextView mUserText, dailyMeal;
+    ImageView dailyMealImage;
 
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
     private DatabaseReference myRef;
+    private DatabaseReference myMealRef;
+    private DatabaseReference myWeekRef;
     private String userID;
 
+    private List<Meal> meals;
     List<ShoppingItem> shoppingItems;
+    private List<String> dailyMeals;
+    Meal dM = null;
+    String todayM = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +72,9 @@ public class MainActivity extends AppCompatActivity
         mListView = (ListView) findViewById(R.id.shoppingListList);
         shoppingItems = new ArrayList<>();
 
+        dailyMeal = (TextView) findViewById(R.id.meal);
+        dailyMealImage = (ImageView) findViewById(R.id.dailyMealImage);
+
 
         mAuth = FirebaseAuth.getInstance();
         //final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -66,12 +82,21 @@ public class MainActivity extends AppCompatActivity
         FirebaseUser user = mAuth.getCurrentUser();
         userID = user.getUid();
         myRef = FirebaseDatabase.getInstance().getReference("users/"+ userID +"/ShoppingList" );
+        myMealRef = FirebaseDatabase.getInstance().getReference("users/"+ userID +"/Recipes" );
+        myWeekRef = FirebaseDatabase.getInstance().getReference("users/"+ userID);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+        final ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
+
+        SimpleDateFormat sdf = new SimpleDateFormat("EEEE");
+        Date d = new Date();
+        String dayOfTheWeek = sdf.format(d);
+        toastMessage(dayOfTheWeek);
+        meals = new ArrayList<>();
+        dailyMeals = new ArrayList<>();
 
 
         //FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -95,6 +120,7 @@ public class MainActivity extends AppCompatActivity
                 }
             }
         };
+
 
         // Read from the database
         myRef.addValueEventListener(new ValueEventListener() {
@@ -123,8 +149,130 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
+        // Read from the database
+        myMealRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                Log.d(TAG, "There are: " + dataSnapshot.getChildrenCount() + " Meals");
+
+                meals.clear();
+
+                for (DataSnapshot mealSnapshot : dataSnapshot.getChildren()) {
+                    Meal meal = mealSnapshot.getValue(Meal.class);
+                    meals.add(meal);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                // Failed to read value
+                //progressDialog.dismiss();
+                Log.w(TAG, "Failed to read value.", error.toException());
+            }
+        });
+        // Read from the database
+        myWeekRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // This method is called once with the initial value and again
+                // whenever data at this location is updated.
+                //progressDialog.dismiss();
+                Log.d(TAG, "There are: " + dataSnapshot.getChildrenCount() + " Weekdays");
+
+                dailyMeals.clear();
+
+                for (DataSnapshot mealSnapshot : dataSnapshot.child("Mealplan").getChildren()) {
+                    dailyMeals.add(mealSnapshot.getValue().toString());
+
+                    //meals.add(meal);
+                }
+                Log.d(TAG, "Weekdays: "+ dailyMeals.toString());
+
+                Calendar calendar = Calendar.getInstance();
+                int day = calendar.get(Calendar.DAY_OF_WEEK);
 
 
+                switch (day) {
+                    case Calendar.SUNDAY:
+                        todayM = dailyMeals.get(3);
+                        break;
+                    case Calendar.MONDAY:
+                        todayM = dailyMeals.get(1);
+                        break;
+                    case Calendar.TUESDAY:
+                        todayM = dailyMeals.get(5);
+                        break;
+                    case Calendar.WEDNESDAY:
+                        todayM = dailyMeals.get(6);
+                        break;
+                    case Calendar.THURSDAY:
+                        todayM = dailyMeals.get(4);
+                        break;
+                    case Calendar.FRIDAY:
+                        todayM = dailyMeals.get(0);
+                        break;
+                    case Calendar.SATURDAY:
+                        todayM = dailyMeals.get(2);
+                        break;
+                }
+                toastMessage(day +todayM);
+                for (DataSnapshot mealSnapshot : dataSnapshot.child("Recipes").getChildren()) {
+                    //Log.d(TAG, "There are:" + dataSnapshot.getChildrenCount());
+                    //Meal kiss = mealSnapshot.child(todayM).getValue(Meal.class);
+                    //Log.d(TAG, kiss.toString());
+
+                    //Meal bajs = mealSnapshot.getValue(Meal.class);
+                    //Log.d(TAG, bajs.getMealName());
+                    //dailyMeals.add(mealSnapshot.getValue().toString());
+
+                    //meals.add(meal);
+                }
+                meals.clear();
+
+                for (DataSnapshot mealSnapshot : dataSnapshot.child("Recipes").getChildren()) {
+                    Meal meal = mealSnapshot.getValue(Meal.class);
+                    meals.add(meal);
+                }
+
+                for(Meal meal: meals){
+                    if(meal.getMealId().equals(todayM)){
+                        dM = meal;
+                        break;
+                    }
+                }
+                dailyMeal.setText(dM.getMealName());
+                Glide.with(getApplicationContext()).load(dM.getMealImageUrl()).into(dailyMealImage);
+                toastMessage(dM.getMealName());
+
+                //toastMessage(meals.toString());
+                //adapter = new RecyclerViewAdapter(getApplicationContext(), meals);
+                //recyclerView.setAdapter(adapter);
+
+                //ShoppingList shoppingAdapter = new ShoppingList(MealPlanActivity.this, shoppingItems);
+                //listView.setAdapter(shoppingAdapter);
+
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                // Failed to read value
+                //progressDialog.dismiss();
+                Log.w(TAG, "Failed to read value.", error.toException());
+            }
+        });
+        LinearLayout dailyMealMain = (LinearLayout) findViewById (R.id.dailyMealMain);
+        dailyMealMain.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                toastMessage("Det funkar");
+                Intent recipeDetailsIntent = new Intent(getApplicationContext(), RecipeDetailsActivity.class);
+                recipeDetailsIntent.putExtra("id", dM.getMealId());
+                recipeDetailsIntent.putExtra("name", dM.getMealName());
+                getApplicationContext().startActivity(recipeDetailsIntent);
+            }
+        });
     }
 
     @Override
