@@ -101,14 +101,14 @@
                 <Button
                     android:layout_width="0dip"
                     android:layout_height="wrap_content"
-                    android:layout_weight="3"
+                    android:layout_weight="9"
                     android:layout_marginTop="10dp"
                     android:text="Back"
                     android:id="@+id/btnRecipeDetailsCancel"
                     android:layout_below="@+id/relativeLayoutRecipeDetails1"
                     android:background="@drawable/button"
                     android:textColor="#fff"/>
-                <Button
+               <!-- <Button
                     android:layout_width="0dip"
                     android:layout_height="wrap_content"
                     android:layout_weight="3"
@@ -127,7 +127,7 @@
                     android:layout_toRightOf="@+id/btnRecipeDetailsDelete"
                     android:id="@+id/btnRecipeDetailsEdit"
                     android:background="@drawable/confirm_btn"
-                    android:textColor="#fff"/>
+                    android:textColor="#fff"/>-->
 
             </LinearLayout>
         </RelativeLayout>
