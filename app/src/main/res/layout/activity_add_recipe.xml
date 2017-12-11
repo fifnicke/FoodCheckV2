@@ -14,26 +14,47 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#F0F0F0">
-
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="40dip"
+            android:text="Recipe Details"
+            android:background="#000"
+            android:textColor="#fff"
+            android:id="@+id/title"
+            android:textSize="20sp"
+            android:textAlignment="center"
+            android:layout_alignParentTop="true"/>
         <EditText
             android:textAlignment="center"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textPersonName"
             android:ems="10"
-            android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
             android:id="@+id/addRecipeName"
             android:hint="Add Recipe Title"
             android:textColor="@color/colorPrimaryDark"
-            android:background="@drawable/shadow1"
+            android:background="@drawable/shadowpurple"
+            android:layout_below="@id/title"
+            android:padding="20dp"
+            android:maxLines="2"
             />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="30dip"
+            android:text="Recipe Image"
+            android:textColor="#000"
+            android:id="@+id/imageTitle"
+            android:textSize="20sp"
+            android:textAlignment="center"
+            android:layout_below="@id/addRecipeName"/>
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="180dp"
             android:background="@drawable/shadow1"
             android:id="@+id/imageLayout"
-            android:layout_below="@+id/addRecipeName">
+            android:layout_below="@+id/imageTitle"
+            android:padding="2dip">
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="150dp"
@@ -56,6 +77,15 @@
             android:background="@drawable/button"
             android:textColor="#fff"
             />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="30dip"
+            android:text="Recipe Instructions"
+            android:textColor="#000"
+            android:id="@+id/instructionsTitle"
+            android:textSize="20sp"
+            android:textAlignment="center"
+            android:layout_below="@id/addRecipeImageButton"/>
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -66,19 +96,27 @@
             android:gravity="top|left"
             android:scrollbars="vertical"
             android:id="@+id/addRecipeInstructions"
-            android:layout_below="@+id/addRecipeImageButton"
+            android:layout_below="@+id/instructionsTitle"
             android:textColor="@color/colorPrimaryDark"
-            android:background="@drawable/shadow1"
+            android:background="@drawable/shadowpurple"
             android:hint="Add Instructions"
             android:textAlignment="center"
             />
-
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="30dip"
+            android:text="Ingredients"
+            android:textColor="#000"
+            android:id="@+id/ingredientTitle"
+            android:textSize="20sp"
+            android:textAlignment="center"
+            android:layout_below="@id/addRecipeInstructions"/>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
             android:id="@+id/linearLayoutIngredients"
-            android:layout_below="@+id/addRecipeInstructions">
+            android:layout_below="@+id/ingredientTitle">
 
             <RelativeLayout
                 android:layout_width="wrap_content"
@@ -91,7 +129,7 @@
                     android:inputType="textPersonName"
                     android:ems="10"
                     android:id="@+id/addIngredientText"
-                    android:background="@drawable/shadow1"
+                    android:background="@drawable/shadowpurple"
                     android:hint="Add ingredient"
                     />
                 <Button
@@ -106,11 +144,12 @@
                     />
             </RelativeLayout>
             <LinearLayout
-                android:layout_height="400dp"
-                android:layout_width="fill_parent"
+                android:layout_height="300dp"
+                android:layout_width="match_parent"
                 android:orientation="vertical"
                 android:layout_below="@+id/relativeLayoutRecipeInstructions1"
                 android:background="@drawable/shadow1"
+                android:padding="0dip"
                 >
                 <ListView
                     android:layout_width="match_parent"

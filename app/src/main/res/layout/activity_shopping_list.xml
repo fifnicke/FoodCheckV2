@@ -10,16 +10,27 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:id="@+id/relativeLayout1"
-    android:layout_marginTop="5dp">
+    >
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="40dip"
+        android:text="Shopping List"
+        android:background="#000"
+        android:textColor="#fff"
+        android:id="@+id/titleShoppingList"
+        android:textSize="20sp"
+        android:textAlignment="center"
+        android:layout_alignParentTop="true"/>
     <EditText
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
         android:id="@+id/editText"
         android:textAlignment="center"
-        android:layout_marginTop="20dp"
-        android:layout_margin="10dp"
-        android:background="@drawable/shadow1"
-        android:hint="Add item"/>
+        android:background="@drawable/shadowpurple"
+        android:hint="Add item"
+        android:padding="20dp"
+        android:maxLines="2"
+        android:layout_below="@id/titleShoppingList"/>
 </RelativeLayout>
     <RelativeLayout
         android:layout_width="fill_parent"
@@ -27,6 +38,7 @@
         android:id="@+id/relativeLayout2"
         android:layout_below="@+id/relativeLayout1"
         android:layout_centerHorizontal="true"
+
         >
         <LinearLayout
             android:layout_width="fill_parent"
@@ -60,10 +72,13 @@
         android:orientation="vertical"
         android:layout_below="@+id/relativeLayout2"
         android:background="@drawable/shadow1"
-        android:layout_margin="10dp">
+        android:padding="0dip">
         <ListView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/shoppinglistView"/>
+            android:layout_height="wrap_content"
+            android:id="@+id/shoppinglistView"
+            android:padding="5dp"
+            android:listSelector="#f0f0f0"
+            />
     </LinearLayout>
 </RelativeLayout>

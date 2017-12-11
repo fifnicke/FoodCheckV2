@@ -31,29 +31,27 @@
             <EditText
                 android:id="@+id/login_email"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
+                android:layout_height="60dp"
                 android:hint="Email"
                 android:inputType="textEmailAddress"
                 android:maxLines="1"
                 android:singleLine="true"
                 android:textColor="@color/colorPrimaryDark"
-                android:background="#FFF"
+                android:background="@drawable/shadowpurple"
                 android:layout_marginBottom="20dp"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
+                android:padding="10dp"
                 />
             <EditText
                 android:id="@+id/login_password"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
+                android:layout_height="60dp"
                 android:hint="Password"
                 android:maxLines="1"
                 android:singleLine="true"
                 android:textColor="@color/colorPrimaryDark"
-                android:background="#FFF"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
-                android:inputType="textPassword"/>
+                android:background="@drawable/shadowpurple"
+                android:inputType="textPassword"
+                android:padding="10dp"/>
             <Button
                 android:id="@+id/login_sign_in_button"
                 style="?android:textAppearanceSmall"
@@ -62,7 +60,7 @@
                 android:layout_marginTop="16dp"
                 android:text="Sign In"
                 android:textStyle="bold"
-                android:background="@color/colorAccent"
+                android:background="@drawable/button_purple"
                 android:textColor="#FFF"/>
             <Button
                 android:id="@+id/login_reset_password_button"

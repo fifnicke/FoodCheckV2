@@ -11,22 +11,32 @@
         android:id="@+id/scroll_tools_form"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/colorPrimaryDark">
+        android:background="#f0f0f0">
 
         <LinearLayout
             android:id="@+id/linear_tools_form"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:background="@color/colorPrimaryDark"
+            android:background="#f0f0f0"
             android:descendantFocusability="beforeDescendants"
             android:focusableInTouchMode="true">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="40dip"
+                android:text="Tools"
+                android:background="#000"
+                android:textColor="#fff"
+                android:id="@+id/title"
+                android:textSize="20sp"
+                android:textAlignment="center"
+                android:layout_alignParentTop="true"/>
             <ImageView
                 android:layout_width="@dimen/logo"
                 android:layout_height="@dimen/logo"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginBottom="30dp"
-                android:src="@mipmap/ic_launcher"/>
+                android:src="@mipmap/foodcheck_logo"/>
 
             <EditText
                 android:id="@+id/tools_email"
@@ -37,8 +47,8 @@
                 android:maxLines="1"
                 android:singleLine="true"
                 android:textColor="@color/colorPrimaryDark"
-                android:background="#FFF"
-                android:layout_marginBottom="20dp"/>
+                android:background="@drawable/shadowpurple"
+                android:textAlignment="center" />
 
             <Button
                 android:id="@+id/tools_change_email"
@@ -48,28 +58,36 @@
                 android:layout_marginTop="16dp"
                 android:text="Change email"
                 android:textStyle="bold"
-                android:background="@color/colorAccent"
+                android:background="@drawable/confirm_btn"
                 android:textColor="#FFF"/>
-            <Button
-                android:id="@+id/tools_sign_out"
-                style="?android:textAppearanceSmall"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="Sign out"
-                android:textStyle="bold"
-                android:background="@android:color/holo_red_light"
-                android:textColor="#FFF"/>
+                android:weightSum="1.0">
+
             <Button
                 android:id="@+id/tools_back"
                 style="?android:textAppearanceSmall"
-                android:layout_width="match_parent"
+                android:layout_width="0dip"
+                android:layout_weight=".5"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:text="Back"
                 android:textStyle="bold"
-                android:background="@android:color/holo_green_light"
+                android:background="@drawable/button"
                 android:textColor="#FFF"/>
+                <Button
+                    android:id="@+id/tools_sign_out"
+                    style="?android:textAppearanceSmall"
+                    android:layout_width="0dip"
+                    android:layout_weight=".5"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="Sign out"
+                    android:textStyle="bold"
+                    android:background="@drawable/cancel_btn"
+                    android:textColor="#FFF"/>
+            </LinearLayout>
             <ProgressBar
                 android:id="@+id/tools_progressBar"
                 android:layout_width="30dp"

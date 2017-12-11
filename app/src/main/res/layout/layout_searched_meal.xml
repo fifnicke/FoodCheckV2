@@ -1,37 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
-    android:layout_height="match_parent">
 
-    <android.support.v7.widget.CardView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        android:padding="8dp">
-
-        <LinearLayout
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/linearLayoutSearchedMealRecycleView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:minHeight="50dp"
-            android:orientation="vertical">
+            android:background="@drawable/shadowoutlineblue"
+            android:padding="0dip"
+            android:orientation="horizontal"
+            android:weightSum="1.0">
 
 
             <TextView
                 android:id="@+id/searchedMealtextViewName"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_width="0dip"
+                android:layout_height="match_parent"
+                android:layout_weight=".6"
                 android:text="Name"
-                android:textAlignment="center" />
+                android:padding="12dp"
+                android:gravity="center"
+                android:textAlignment="viewStart"
+                android:textSize="20sp"
+                android:textColor="#000"
+                android:maxLines="2"/>
 
             <ImageView
                 android:id="@+id/searchedMealimageView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/searchedMealtextViewName" />
+                android:layout_width="0dip"
+                android:layout_height="match_parent"
+                android:layout_weight=".4"
+                android:layout_below="@id/textViewName"
+                android:src="@mipmap/ic_launcher"
+                android:padding="12dp"/>
 
         </LinearLayout>
-
-    </android.support.v7.widget.CardView>
-
-</android.support.constraint.ConstraintLayout>

@@ -8,7 +8,11 @@
     <TextView
         android:id="@+id/textViewName"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
+        android:textSize="20sp"
+        android:padding="12dp"
+        android:gravity="center"
+        android:textAlignment="viewStart"
         android:text="Placeholder name"
         android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
         />
