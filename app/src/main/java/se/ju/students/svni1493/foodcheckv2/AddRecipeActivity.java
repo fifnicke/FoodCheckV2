@@ -26,10 +26,12 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -86,6 +88,12 @@ public class AddRecipeActivity extends AppCompatActivity {
     StorageReference storageRef = storage.getReference();
     String imagePath;
 
+    private String selectedName;
+    private String selectedID;
+    private String selectedUrl;
+    private Boolean editMode = false;
+    private DatabaseReference myMealRef;
+    private DatabaseReference listRef;
 
 
 
@@ -118,6 +126,24 @@ public class AddRecipeActivity extends AppCompatActivity {
         meals = new ArrayList<>();
         imageUri = null;
 
+        arrayList = new ArrayList<String>();
+
+        //get the intent extras
+
+        Intent recivedIntent = getIntent();
+        //get itemId
+        selectedID = recivedIntent.getStringExtra("id");// -1 is just the default value
+        toastMessage(String.valueOf(selectedID));
+        //get name
+        selectedName = recivedIntent.getStringExtra("name");
+
+        selectedUrl = recivedIntent.getStringExtra("url");
+        if(recivedIntent.hasExtra("edit")){
+            editMode = recivedIntent.getExtras().getBoolean("edit");
+        }
+
+
+        toastMessage(selectedName);
 
 
         mAuthListener = new FirebaseAuth.AuthStateListener() {
@@ -142,24 +168,38 @@ public class AddRecipeActivity extends AppCompatActivity {
                 return true;
             }
         });*/
+        myMealRef = FirebaseDatabase.getInstance().getReference("users/"+ userID +"/Recipes/"+selectedID );
 
         // Read from the database
-        myRef.addValueEventListener(new ValueEventListener() {
+        myMealRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // This method is called once with the initial value and again
                 // whenever data at this location is updated.
                 Log.d(TAG, "There are: " + dataSnapshot.getChildrenCount()+ " items");
-
-                /*shoppingItems.clear();
-
-                for(DataSnapshot shoppingSnapshot: dataSnapshot.getChildren()){
-                    ShoppingItem shoppingItem = shoppingSnapshot.getValue(ShoppingItem.class);
-                    shoppingItems.add(shoppingItem);
+                meals.clear();
+                if(editMode){
+                    String mName = dataSnapshot.child("mealName").getValue(String.class);
+                    String mInstructions= dataSnapshot.child("mealInstructions").getValue(String.class);
+                    addRecipeName.setText(mName);
+                    addRecipeInstructions.setText(mInstructions);
+                    //arrayList = dataSnapshot.getChildren("mealIngredients");
+                    Glide.with(getApplicationContext()).load(selectedUrl).into(addRecipeImage);
+                    //toastMessage("Receptnamn: "+ namnet);
                 }
 
-                ShoppingList shoppingAdapter = new ShoppingList(ShoppingListActivity.this, shoppingItems);
-                listView.setAdapter(shoppingAdapter);*/
+                /*
+                for(DataSnapshot mealSnapshot: dataSnapshot.getChildren()){
+                    Meal meal = mealSnapshot.getValue(Meal.class);
+                    meals.add(meal);
+                }
+                toastMessage("Det funka nog");
+                if(editMode){
+
+                }*/
+
+                //ShoppingList shoppingAdapter = new ShoppingList(ShoppingListActivity.this, shoppingItems);
+                //listView.setAdapter(shoppingAdapter);*/
 
             }
 
@@ -188,9 +228,44 @@ public class AddRecipeActivity extends AppCompatActivity {
 
         onbtnIngredientAddClick();
 
-        arrayList = new ArrayList<String>();
         adapter = new ArrayAdapter<String>(AddRecipeActivity.this, android.R.layout.simple_list_item_1,arrayList);
         ingredientListView.setAdapter(adapter);
+
+        // Read from the database
+        listRef = myMealRef.child("mealIngredients");
+        listRef.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                if(editMode){
+                    String value = dataSnapshot.getValue(String.class);
+                    arrayList.add(value);
+                    adapter.notifyDataSetChanged();
+                }
+
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+
 
         btnRecipeCancel.setOnClickListener(new View.OnClickListener(){
             public void onClick(View view){
@@ -209,6 +284,7 @@ public class AddRecipeActivity extends AppCompatActivity {
         });
     }
 
+
     public void onbtnIngredientAddClick() {
         btnIngredientAdd.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -226,7 +302,7 @@ public class AddRecipeActivity extends AppCompatActivity {
 
         String id = myRef.push().getKey();
 
-        if(filePath != null){
+        if(filePath != null && !editMode){
             StorageReference childRef = storageRef.child(id);
 
             UploadTask uploadTask = childRef.putFile(filePath);
@@ -238,14 +314,15 @@ public class AddRecipeActivity extends AppCompatActivity {
                     imagePath = downloadUri.toString();
                     //System.out.println(imagePath);
                     String id = myRef.push().getKey();
+                    String image = "placeholder url";
+                    String day = "placeholderDay";
+                    //String id = myRef.push().getKey();
                     String name = addRecipeName.getText().toString();
                     String instructions = addRecipeInstructions.getText().toString();
-                    String image = "placeholder url";
-
 
                     if(!TextUtils.isEmpty(name)){
 
-                        Meal meal = new Meal(id, name, instructions, arrayList, taskSnapshot.getDownloadUrl().toString());
+                        Meal meal = new Meal(id, name, instructions, arrayList, taskSnapshot.getDownloadUrl().toString(),day);
                         myRef.child(id).setValue(meal);
                         addRecipeName.setText("");
                         toastMessage("Added "+ name + " to firebase!");
@@ -261,7 +338,64 @@ public class AddRecipeActivity extends AppCompatActivity {
                     Toast.makeText(AddRecipeActivity.this, "Upload Failed -> " + e, Toast.LENGTH_SHORT).show();
                 }
             });
-        }else{
+        }else if(editMode){
+            if(filePath == null){
+                id = selectedID;
+                String name = addRecipeName.getText().toString();
+                String instructions = addRecipeInstructions.getText().toString();
+                String day = "placeholderDay";
+                if(!TextUtils.isEmpty(name)){
+
+                    Meal meal = new Meal(id, name, instructions, arrayList,selectedUrl, day);
+                    myRef.child(id).setValue(meal);
+                    addRecipeName.setText("");
+                    toastMessage("Added "+ name + " to firebase!");
+                    finish();
+                }else {
+                    toastMessage("You need to add a name!");
+                }
+            }else{
+                id = myRef.push().getKey();
+                StorageReference childRef = storageRef.child(id);
+
+                UploadTask uploadTask = childRef.putFile(filePath);
+                uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        Uri downloadUri = taskSnapshot.getDownloadUrl();
+                        imageUri = downloadUri;
+                        imagePath = downloadUri.toString();
+                        //System.out.println(imagePath);
+                        String id = selectedID;
+                        String image = "placeholder url";
+                        String day = "placeholderDay";
+                        //String id = myRef.push().getKey();
+                        String name = addRecipeName.getText().toString();
+                        String instructions = addRecipeInstructions.getText().toString();
+
+                        if(!TextUtils.isEmpty(name)){
+
+                            Meal meal = new Meal(id, name, instructions, arrayList, taskSnapshot.getDownloadUrl().toString(),day);
+                            myRef.child(id).setValue(meal);
+                            addRecipeName.setText("");
+                            toastMessage("Added "+ name + " to firebase!");
+                            finish();
+                        }else {
+                            toastMessage("You need to add a name!");
+                        }
+                        Toast.makeText(AddRecipeActivity.this, "Upload successful", Toast.LENGTH_SHORT).show();
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(AddRecipeActivity.this, "Upload Failed -> " + e, Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+            }
+
+
+        } else{
             toastMessage("Select an image");
         }
 

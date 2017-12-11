@@ -22,10 +22,10 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.List;
 
 /**
- * Created by fifnicke on 2017-12-09.
+ * Created by fifnicke on 2017-12-10.
  */
 
-public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
+public class RecyclerSelectMealAdapter extends RecyclerView.Adapter<RecyclerSelectMealAdapter.ViewHolder> {
 
     private FirebaseAuth mAuth;
     private String userID;
@@ -33,7 +33,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     Context context;
     List<Meal> meals;
 
-    public RecyclerViewAdapter(Context context, List<Meal> meals) {
+    public RecyclerSelectMealAdapter(Context context, List<Meal> meals) {
 
         this.meals = meals;
         this.context = context;
@@ -42,9 +42,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_recycler_view, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_select_meal, parent, false);
 
-        ViewHolder viewHolder = new ViewHolder(view);
+        ViewHolder viewHolder = new ViewHolder(view);;
 
         return viewHolder;
     }
@@ -62,10 +62,12 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             @Override
             public void onClick(View view) {
                 Toast.makeText(context, "You clicked " + meal.getMealName(), Toast.LENGTH_LONG).show();
-                Intent recipeDetailsIntent = new Intent(context, RecipeDetailsActivity.class);
-                recipeDetailsIntent.putExtra("id", meal.getMealId());
-                recipeDetailsIntent.putExtra("name", meal.getMealName());
-                context.startActivity(recipeDetailsIntent);
+                Intent backIntent = new Intent(context, MealPlanActivity.class);
+                //backIntent.putExtra("day", context.getString())
+                backIntent.putExtra("id", meal.getMealId());
+                backIntent.putExtra("name", meal.getMealName());
+                context.startActivity(backIntent);
+                //lägg till flagga för att ta bort från  backstack
             }
         });
         holder.linearLayoutRecycleView.setOnLongClickListener(new View.OnLongClickListener() {
@@ -82,7 +84,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                         dialog.cancel();
                     }
                 });
-                alertDialog.setNegativeButton("DELETE", new DialogInterface.OnClickListener() {
+                /*alertDialog.setNegativeButton("DELETE", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         Toast.makeText(context, "Fix delete func " + meal.getMealName(), Toast.LENGTH_LONG).show();
@@ -96,12 +98,12 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                         // DO SOMETHING HERE
 
                     }
-                });
-                alertDialog.setNeutralButton("EDIT", new DialogInterface.OnClickListener() {
+                });*/
+                alertDialog.setNeutralButton("CHANGE MEAL", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        Toast.makeText(context, "Edit recipe " + meal.getMealName(), Toast.LENGTH_LONG).show();
-                        Boolean edit = true;
+                        Toast.makeText(context, "Change meal" + meal.getMealName(), Toast.LENGTH_LONG).show();
+                        //Boolean edit = true;
                         Intent addRecipeIntent = new Intent(context, AddRecipeActivity.class);
                         addRecipeIntent.putExtra("id", meal.getMealId());
                         addRecipeIntent.putExtra("name", meal.getMealName());
@@ -134,11 +136,11 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
             super(itemView);
 
-            textViewName = (TextView) itemView.findViewById(R.id.textViewName);
+            textViewName = (TextView) itemView.findViewById(R.id.selectMealtextViewName);
 
-            imageView = (ImageView) itemView.findViewById(R.id.imageView);
+            imageView = (ImageView) itemView.findViewById(R.id.selectMealimageView);
 
-            linearLayoutRecycleView = (LinearLayout) itemView.findViewById(R.id.linearLayoutRecycleView);
+            linearLayoutRecycleView = (LinearLayout) itemView.findViewById(R.id.linearLayoutSelectMealRecycleView);
         }
     }
 }

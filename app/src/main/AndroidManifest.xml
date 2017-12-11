@@ -49,7 +49,8 @@
 
         <activity android:name=".SignUpActivity" />
         <activity android:name=".ResetPasswordActivity" />
-        <activity android:name=".ToolsActivity"></activity>
+        <activity android:name=".ToolsActivity" />
+        <activity android:name=".SelectMealPlanActivity"></activity>
     </application>
 
 </manifest>

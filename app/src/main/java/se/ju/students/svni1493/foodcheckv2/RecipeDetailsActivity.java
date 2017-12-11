@@ -112,11 +112,16 @@ public class RecipeDetailsActivity extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // This method is called once with the initial value and again
                 // whenever data at this location is updated.
+
                 Log.d(TAG, "There are: " + dataSnapshot.getChildrenCount()+ " items");
-                Meal meal = dataSnapshot.getValue(Meal.class);
-                recipeDetailsName.setText(meal.getMealName());
-                Glide.with(RecipeDetailsActivity.this).load(meal.getMealImageUrl()).into(recipeDetailsImage);
-                recipeDetailsInstructions.setText(meal.getMealInstructions());
+
+                if(dataSnapshot.getChildrenCount() != 0){
+                    Meal meal = dataSnapshot.getValue(Meal.class);
+                    recipeDetailsName.setText(meal.getMealName());
+                    Glide.with(getApplicationContext()).load(meal.getMealImageUrl()).into(recipeDetailsImage);
+                    recipeDetailsInstructions.setText(meal.getMealInstructions());
+                }
+
                 //meals.clear();
 
                /* for(DataSnapshot mealSnapshot: dataSnapshot.getChildren()){

@@ -138,7 +138,7 @@ public class RecipeActivity extends AppCompatActivity {
                 //progressDialog.dismiss();
                 Log.d(TAG, "There are: " + dataSnapshot.getChildrenCount()+ " items");
 
-                //shoppingItems.clear();
+                meals.clear();
 
                 for(DataSnapshot mealSnapshot: dataSnapshot.getChildren()){
                     Meal meal = mealSnapshot.getValue(Meal.class);

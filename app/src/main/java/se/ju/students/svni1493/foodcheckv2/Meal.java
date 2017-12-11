@@ -12,17 +12,19 @@ public class Meal {
     private String mealInstructions;
     private List<String> mealIngredients;
     private String mealImageUrl;
+    private String day;
     //private String ingredients;
     //private byte[] image;
 
     public Meal(){
     }
-    public Meal(String mealId, String mealName, String mealInstructions, List<String> mealIngredients, String mealImageUrl){
+    public Meal(String mealId, String mealName, String mealInstructions, List<String> mealIngredients, String mealImageUrl, String day){
         this.mealId = mealId;
         this.mealName = mealName;
         this.mealInstructions = mealInstructions;
         this.mealIngredients = mealIngredients;
         this.mealImageUrl = mealImageUrl;
+        this.day = day;
     }
 
     public String getMealId() {
@@ -43,5 +45,9 @@ public class Meal {
 
     public String getMealInstructions() {
         return mealInstructions;
+    }
+
+    public String getDay() {
+        return day;
     }
 }
