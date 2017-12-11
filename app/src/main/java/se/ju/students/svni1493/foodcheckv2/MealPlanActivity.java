@@ -131,7 +131,6 @@ public class MealPlanActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 day = "Monday";
-                toastMessage("Clicked:" + day);
 
                 Intent selectMealIntent = new Intent(getApplicationContext(), SelectMealPlanActivity.class);
                 //selectMealIntent.putExtra("id", meal.getMealId());
@@ -145,7 +144,6 @@ public class MealPlanActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 day = "Tuesday";
-                toastMessage("Clicked:" + day);
 
                 Intent selectMealIntent = new Intent(getApplicationContext(), SelectMealPlanActivity.class);
                 //selectMealIntent.putExtra("id", meal.getMealId());
@@ -159,7 +157,6 @@ public class MealPlanActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 day = "Wednesday";
-                toastMessage("Clicked:" + day);
 
                 Intent selectMealIntent = new Intent(getApplicationContext(), SelectMealPlanActivity.class);
                 //selectMealIntent.putExtra("id", meal.getMealId());
@@ -173,7 +170,6 @@ public class MealPlanActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 day = "Thursday";
-                toastMessage("Clicked:" + day);
 
                 Intent selectMealIntent = new Intent(getApplicationContext(), SelectMealPlanActivity.class);
                 //selectMealIntent.putExtra("id", meal.getMealId());
@@ -187,7 +183,6 @@ public class MealPlanActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 day = "Friday";
-                toastMessage("Clicked:" + day);
 
                 Intent selectMealIntent = new Intent(getApplicationContext(), SelectMealPlanActivity.class);
                 //selectMealIntent.putExtra("id", meal.getMealId());
@@ -201,7 +196,6 @@ public class MealPlanActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 day = "Saturday";
-                toastMessage("Clicked:" + day);
 
                 Intent selectMealIntent = new Intent(getApplicationContext(), SelectMealPlanActivity.class);
                 //selectMealIntent.putExtra("id", meal.getMealId());
@@ -215,7 +209,6 @@ public class MealPlanActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 day = "Sunday";
-                toastMessage("Clicked:" + day);
 
                 Intent selectMealIntent = new Intent(getApplicationContext(), SelectMealPlanActivity.class);
                 //selectMealIntent.putExtra("id", meal.getMealId());
@@ -230,15 +223,12 @@ public class MealPlanActivity extends AppCompatActivity {
         if(recivedIntent.hasExtra("id")){
             gotId = recivedIntent.getStringExtra("id");// -1 is just the default value
             addShoppingItem();
-            //toastMessage(gotId);
         }
         if(recivedIntent.hasExtra("name")){
             gotName = recivedIntent.getStringExtra("name");// -1 is just the default value
-            toastMessage(gotName);
         }
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         day = prefs.getString("selectedDay", "no id"); //no id: default value
-        toastMessage( "Sparad dag "+day);
 
         /*
         btnBack = (Button) findViewById(R.id.mealplan_back);
@@ -332,7 +322,6 @@ public class MealPlanActivity extends AppCompatActivity {
                     meals.add(meal);
                 }
                 String bv = String.valueOf(meals.size());
-                toastMessage(bv);
                 List<String> mealPlanInOrder = new ArrayList<String>();
 
                 for(DataSnapshot mealSnapshot: dataSnapshot.child("Mealplan").getChildren()){
@@ -340,9 +329,7 @@ public class MealPlanActivity extends AppCompatActivity {
                     mealPlanInOrder.add(mealSnapshot.getKey());
                 }
                 for(int i = 0; i < mealPlanInOrder.size(); i++){
-                        toastMessage(mealPlanInOrder.get(i) + testMealPlan.get(i));
                         String dagensMeal = testMealPlan.get(i);
-                        toastMessage("Dagens meal: " + dagensMeal);
                         //mondayText.setText(mealPlanInOrder.get(i));
                 }
                 for(int i = 0; i < testMealPlan.size(); i++){
@@ -414,7 +401,6 @@ public class MealPlanActivity extends AppCompatActivity {
                 Log.d(TAG, mealPlanInOrder.toString());
                 Log.d(TAG, testMealPlan.toString());
                 String asd = String.valueOf(testMealPlan.size());
-                toastMessage(asd);
 
                 for(int i = 0; i < testMealPlan.size(); i++){
                     String mId = testMealPlan.get(i);
@@ -456,9 +442,7 @@ public class MealPlanActivity extends AppCompatActivity {
     private void addShoppingItem(){
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         String testDag = prefs.getString("selectedDay", "no id"); //no id: default value
-        toastMessage( "Sparad dag "+testDag);
         myPlanRef.child(testDag).setValue(gotId);
-        toastMessage("Added "+ gotId + " on " + day + " in Mealplan. Testdag: " + testDag );
 
     }
 

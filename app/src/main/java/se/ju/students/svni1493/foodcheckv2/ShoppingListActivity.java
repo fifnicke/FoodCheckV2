@@ -141,7 +141,6 @@ public class ShoppingListActivity extends AppCompatActivity {
             ShoppingItem shoppingItem = new ShoppingItem(id, name);
             myRef.child(id).setValue(shoppingItem);
             foodText.setText("");
-            toastMessage("Added "+ name + " to firebase!");
         }else {
             toastMessage("You need to add a name!");
         }
@@ -152,7 +151,6 @@ public class ShoppingListActivity extends AppCompatActivity {
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("users/"+ userID +"/ShoppingList").child(id);
         ShoppingItem shoppingItem = new ShoppingItem(id,name);
         databaseReference.setValue(shoppingItem);
-        toastMessage("Item updated");
         return true;
     }
     private boolean deleteItem(String id) {

@@ -133,7 +133,7 @@ public class AddRecipeActivity extends AppCompatActivity {
         Intent recivedIntent = getIntent();
         //get itemId
         selectedID = recivedIntent.getStringExtra("id");// -1 is just the default value
-        toastMessage(String.valueOf(selectedID));
+        //toastMessage(String.valueOf(selectedID));
         //get name
         selectedName = recivedIntent.getStringExtra("name");
 
@@ -143,7 +143,7 @@ public class AddRecipeActivity extends AppCompatActivity {
         }
 
 
-        toastMessage(selectedName);
+        //toastMessage(selectedName);
 
 
         mAuthListener = new FirebaseAuth.AuthStateListener() {
@@ -276,10 +276,24 @@ public class AddRecipeActivity extends AppCompatActivity {
         addRecipeImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent();
-                intent.setType("image/*");
-                intent.setAction(Intent.ACTION_PICK);
-                startActivityForResult(Intent.createChooser(intent, "Select Image"), PICK_IMAGE_REQUEST);
+                try {
+                    if (ActivityCompat.checkSelfPermission(AddRecipeActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                        ActivityCompat.requestPermissions(AddRecipeActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, PICK_IMAGE_REQUEST);
+                    } else {
+                        Intent intent = new Intent();
+                        intent.setType("image/*");
+                        intent.setAction(Intent.ACTION_PICK);
+                        startActivityForResult(Intent.createChooser(intent, "Select Image"), PICK_IMAGE_REQUEST);
+                        //Intent galleryIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                        //startActivityForResult(galleryIntent, PICK_FROM_GALLERY);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                //Intent intent = new Intent();
+                //intent.setType("image/*");
+                //intent.setAction(Intent.ACTION_PICK);
+                //startActivityForResult(Intent.createChooser(intent, "Select Image"), PICK_IMAGE_REQUEST);
             }
         });
     }
@@ -326,17 +340,17 @@ public class AddRecipeActivity extends AppCompatActivity {
                         Meal meal = new Meal(id, name, instructions, arrayList, taskSnapshot.getDownloadUrl().toString(),day, href);
                         myRef.child(id).setValue(meal);
                         addRecipeName.setText("");
-                        toastMessage("Added "+ name + " to firebase!");
+                        //Message("Added "+ name + " to firebase!");
                         finish();
                     }else {
                         toastMessage("You need to add a name!");
                     }
-                    Toast.makeText(AddRecipeActivity.this, "Upload successful", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(AddRecipeActivity.this, "Upload successful", Toast.LENGTH_SHORT).show();
                 }
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
-                    Toast.makeText(AddRecipeActivity.this, "Upload Failed -> " + e, Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(AddRecipeActivity.this, "Upload Failed -> " + e, Toast.LENGTH_SHORT).show();
                 }
             });
         }else if(editMode){
@@ -351,10 +365,10 @@ public class AddRecipeActivity extends AppCompatActivity {
                     Meal meal = new Meal(id, name, instructions, arrayList,selectedUrl, day, href);
                     myRef.child(id).setValue(meal);
                     addRecipeName.setText("");
-                    toastMessage("Added "+ name + " to firebase!");
+                    //toastMessage("Added "+ name + " to firebase!");
                     finish();
                 }else {
-                    toastMessage("You need to add a name!");
+                    //toastMessage("You need to add a name!");
                 }
             }else{
                 id = myRef.push().getKey();
@@ -381,17 +395,17 @@ public class AddRecipeActivity extends AppCompatActivity {
                             Meal meal = new Meal(id, name, instructions, arrayList, taskSnapshot.getDownloadUrl().toString(),day, href);
                             myRef.child(id).setValue(meal);
                             addRecipeName.setText("");
-                            toastMessage("Added "+ name + " to firebase!");
+                            //toastMessage("Added "+ name + " to firebase!");
                             finish();
                         }else {
-                            toastMessage("You need to add a name!");
+                            //toastMessage("You need to add a name!");
                         }
-                        Toast.makeText(AddRecipeActivity.this, "Upload successful", Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(AddRecipeActivity.this, "Upload successful", Toast.LENGTH_SHORT).show();
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(AddRecipeActivity.this, "Upload Failed -> " + e, Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(AddRecipeActivity.this, "Upload Failed -> " + e, Toast.LENGTH_SHORT).show();
                     }
                 });
 

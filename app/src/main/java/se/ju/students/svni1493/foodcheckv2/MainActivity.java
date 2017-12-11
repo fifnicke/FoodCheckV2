@@ -94,13 +94,11 @@ public class MainActivity extends AppCompatActivity
         SimpleDateFormat sdf = new SimpleDateFormat("EEEE");
         Date d = new Date();
         String dayOfTheWeek = sdf.format(d);
-        toastMessage(dayOfTheWeek);
         meals = new ArrayList<>();
         dailyMeals = new ArrayList<>();
 
 
         //FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        toastMessage(user.getEmail().toString());
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
@@ -216,7 +214,6 @@ public class MainActivity extends AppCompatActivity
                         todayM = dailyMeals.get(2);
                         break;
                 }
-                toastMessage(day +todayM);
                 for (DataSnapshot mealSnapshot : dataSnapshot.child("Recipes").getChildren()) {
                     //Log.d(TAG, "There are:" + dataSnapshot.getChildrenCount());
                     //Meal kiss = mealSnapshot.child(todayM).getValue(Meal.class);
@@ -243,14 +240,6 @@ public class MainActivity extends AppCompatActivity
                 }
                 dailyMeal.setText(dM.getMealName());
                 Glide.with(getApplicationContext()).load(dM.getMealImageUrl()).into(dailyMealImage);
-                toastMessage(dM.getMealName());
-
-                //toastMessage(meals.toString());
-                //adapter = new RecyclerViewAdapter(getApplicationContext(), meals);
-                //recyclerView.setAdapter(adapter);
-
-                //ShoppingList shoppingAdapter = new ShoppingList(MealPlanActivity.this, shoppingItems);
-                //listView.setAdapter(shoppingAdapter);
 
 
             }
@@ -266,7 +255,6 @@ public class MainActivity extends AppCompatActivity
         dailyMealMain.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                toastMessage("Det funkar");
                 Intent recipeDetailsIntent = new Intent(getApplicationContext(), RecipeDetailsActivity.class);
                 recipeDetailsIntent.putExtra("id", dM.getMealId());
                 recipeDetailsIntent.putExtra("name", dM.getMealName());

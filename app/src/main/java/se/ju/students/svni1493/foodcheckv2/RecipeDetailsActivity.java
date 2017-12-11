@@ -101,10 +101,8 @@ public class RecipeDetailsActivity extends AppCompatActivity {
         Intent recivedIntent = getIntent();
         //get itemId
         selectedID = recivedIntent.getStringExtra("id");// -1 is just the default value
-        toastMessage(String.valueOf(selectedID));
         //get name
         selectedName = recivedIntent.getStringExtra("name");
-        toastMessage(selectedName);
         myRef = FirebaseDatabase.getInstance().getReference("users/"+ userID +"/Recipes/" +selectedID+"" );
         // Read from the database
         myRef.addValueEventListener(new ValueEventListener() {

@@ -59,7 +59,7 @@ public class SearchedMealRecycleViewAdapter extends RecyclerView.Adapter<Searche
         holder.linearLayoutRecycleView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(context, "You clicked " + meal.getMealName(), Toast.LENGTH_LONG).show();
+                //Toast.makeText(context, "You clicked " + meal.getMealName(), Toast.LENGTH_LONG).show();
                 Intent recipeDetailsIntent = new Intent(context, SearchedMealDetailsActivity.class);
                 recipeDetailsIntent.putExtra("id", meal.getMealId());
                 recipeDetailsIntent.putExtra("name", meal.getMealName());
@@ -73,7 +73,7 @@ public class SearchedMealRecycleViewAdapter extends RecyclerView.Adapter<Searche
         holder.linearLayoutRecycleView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
-                Toast.makeText(context, "You Longclicked " + meal.getMealName(), Toast.LENGTH_LONG).show();
+                //Toast.makeText(context, "You Longclicked " + meal.getMealName(), Toast.LENGTH_LONG).show();
                 //pass the 'context' here
                /* AlertDialog.Builder alertDialog = new AlertDialog.Builder(view.getContext());
                 alertDialog.setTitle(meal.getMealName());

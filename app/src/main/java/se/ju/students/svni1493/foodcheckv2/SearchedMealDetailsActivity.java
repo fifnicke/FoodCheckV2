@@ -111,10 +111,10 @@ public class SearchedMealDetailsActivity extends AppCompatActivity {
                 if(!TextUtils.isEmpty(name)){
                     Meal meal = new Meal(id, name, instructions, arrayList,image, day, href);
                     myRef.child(id).setValue(meal);
-                    toastMessage("Added "+ name + " to firebase!");
+                    //toastMessage("Added "+ name + " to firebase!");
                     finish();
                 }else {
-                    toastMessage("Something went wrong!");
+                    //toastMessage("Something went wrong!");
                 }
             }
         });
@@ -133,10 +133,10 @@ public class SearchedMealDetailsActivity extends AppCompatActivity {
         Intent recivedIntent = getIntent();
         //get itemId
         selectedID = recivedIntent.getStringExtra("id");// -1 is just the default value
-        toastMessage(String.valueOf(selectedID));
+        //toastMessage(String.valueOf(selectedID));
         //get name
         selectedName = recivedIntent.getStringExtra("name");
-        toastMessage(selectedName);
+        //toastMessage(selectedName);
 
         selectedHref = recivedIntent.getStringExtra("href");
 
@@ -144,7 +144,7 @@ public class SearchedMealDetailsActivity extends AppCompatActivity {
 
 
         arrayList = getIntent().getStringArrayListExtra("list");
-        toastMessage(arrayList.toString());
+        //toastMessage(arrayList.toString());
 
 
         //myRef = FirebaseDatabase.getInstance().getReference("users/"+ userID +"/Recipes/" +selectedID+"" );

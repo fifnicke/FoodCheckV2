@@ -61,8 +61,9 @@ public class RecyclerSelectMealAdapter extends RecyclerView.Adapter<RecyclerSele
         holder.linearLayoutRecycleView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(context, "You clicked " + meal.getMealName(), Toast.LENGTH_LONG).show();
+                //Toast.makeText(context, "You clicked " + meal.getMealName(), Toast.LENGTH_LONG).show();
                 Intent backIntent = new Intent(context, MealPlanActivity.class);
+                backIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 //backIntent.putExtra("day", context.getString())
                 backIntent.putExtra("id", meal.getMealId());
                 backIntent.putExtra("name", meal.getMealName());
@@ -73,7 +74,7 @@ public class RecyclerSelectMealAdapter extends RecyclerView.Adapter<RecyclerSele
         holder.linearLayoutRecycleView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
-                Toast.makeText(context, "You Longclicked " + meal.getMealName(), Toast.LENGTH_LONG).show();
+                //Toast.makeText(context, "You Longclicked " + meal.getMealName(), Toast.LENGTH_LONG).show();
                 //pass the 'context' here
                 AlertDialog.Builder alertDialog = new AlertDialog.Builder(view.getContext());
                 alertDialog.setTitle(meal.getMealName());
@@ -102,7 +103,7 @@ public class RecyclerSelectMealAdapter extends RecyclerView.Adapter<RecyclerSele
                 alertDialog.setNeutralButton("CHANGE MEAL", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        Toast.makeText(context, "Change meal" + meal.getMealName(), Toast.LENGTH_LONG).show();
+                        //Toast.makeText(context, "Change meal" + meal.getMealName(), Toast.LENGTH_LONG).show();
                         //Boolean edit = true;
                         Intent addRecipeIntent = new Intent(context, AddRecipeActivity.class);
                         addRecipeIntent.putExtra("id", meal.getMealId());

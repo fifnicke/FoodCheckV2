@@ -63,7 +63,7 @@ public class EditDataActivity extends AppCompatActivity {
             public void onClick(View view){
                 mDatabaseHelper.deleteName(selectedID,selectedName);
                 editable_item.setText("");
-                toastMessage("Removed from database.");
+                //toastMessage("Removed from database.");
                 Intent backIntent = new Intent(EditDataActivity.this, ShoppingListActivity.class);
                 backIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(backIntent);
