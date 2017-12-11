@@ -1,6 +1,8 @@
 package se.ju.students.svni1493.foodcheckv2;
 
 import android.Manifest;
+import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.location.Address;
@@ -12,6 +14,7 @@ import android.os.AsyncTask;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.widget.Spinner;
 
@@ -60,96 +63,114 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         mPlaceType = getResources().getStringArray(R.array.place_type);
         mPlaceTypeName = getResources().getStringArray(R.array.place_type_name);
+        int hasLocationPermission = ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION);
 
-        locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return;
+        try {
+            if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(MapsActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION},1);
+            } else {
+                locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+                /*
+                if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    // TODO: Consider calling
+                    //    ActivityCompat#requestPermissions
+                    // here to request the missing permissions, and then overriding
+                    //
+                    //  public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                    //                                          int[] grantResults)
+                    // to handle the case where the user grants the permission. See the documentation
+                    // for ActivityCompat#requestPermissions for more details.
+                    Log.d(TAG, "hmmm");
+                    return;
+                }*/
+
+                //check if network provider is enabled
+                if(locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)){
+                    locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, new LocationListener() {
+                        @Override
+                        public void onLocationChanged(Location location) {
+                            double latitude = location.getLatitude();
+                            double longitude = location.getLongitude();
+                            //mMap.clear();
+                            LatLng latLng = new LatLng(latitude, longitude);
+                            Geocoder geocoder = new Geocoder(getApplicationContext());
+                            try {
+                                List<Address> adressList = geocoder.getFromLocation(latitude, longitude, 1);
+                                String str = adressList.get(0).getLocality()+", ";
+                                str += adressList.get(0).getCountryName();
+                                mMap.addMarker(new MarkerOptions().position(latLng).title(str).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_VIOLET)));
+                                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 12f));
+                                findPlaces(location);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+
+                        @Override
+                        public void onStatusChanged(String s, int i, Bundle bundle) {
+
+                        }
+
+                        @Override
+                        public void onProviderEnabled(String s) {
+
+                        }
+
+                        @Override
+                        public void onProviderDisabled(String s) {
+
+                        }
+                    });
+                }else if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)){
+                    locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, new LocationListener() {
+                        @Override
+                        public void onLocationChanged(Location location) {
+                            double latitude = location.getLatitude();
+                            double longitude = location.getLongitude();
+                            //mMap.clear();
+
+                            LatLng latLng = new LatLng(latitude, longitude);
+                            Geocoder geocoder = new Geocoder(getApplicationContext());
+                            try {
+                                List<Address> adressList = geocoder.getFromLocation(latitude, longitude, 1);
+                                String str = adressList.get(0).getLocality() + ", ";
+                                str += adressList.get(0).getCountryName();
+                                mMap.addMarker(new MarkerOptions().position(latLng).title(str).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_VIOLET)));
+                                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 12f));
+                                findPlaces(location);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+
+                        @Override
+                        public void onStatusChanged(String s, int i, Bundle bundle) {
+
+                        }
+
+                        @Override
+                        public void onProviderEnabled(String s) {
+
+                        }
+
+                        @Override
+                        public void onProviderDisabled(String s) {
+
+                        }
+                    });
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        //check if network provider is enabled
-        if(locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)){
-            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, new LocationListener() {
-                @Override
-                public void onLocationChanged(Location location) {
-                    double latitude = location.getLatitude();
-                    double longitude = location.getLongitude();
-                    //mMap.clear();
-                    LatLng latLng = new LatLng(latitude, longitude);
-                    Geocoder geocoder = new Geocoder(getApplicationContext());
-                    try {
-                        List<Address> adressList = geocoder.getFromLocation(latitude, longitude, 1);
-                        String str = adressList.get(0).getLocality()+", ";
-                        str += adressList.get(0).getCountryName();
-                        mMap.addMarker(new MarkerOptions().position(latLng).title(str).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_VIOLET)));
-                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 12f));
-                        findPlaces(location);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
 
-                @Override
-                public void onStatusChanged(String s, int i, Bundle bundle) {
 
-                }
 
-                @Override
-                public void onProviderEnabled(String s) {
 
-                }
-
-                @Override
-                public void onProviderDisabled(String s) {
-
-                }
-            });
-        }else if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)){
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, new LocationListener() {
-                @Override
-                public void onLocationChanged(Location location) {
-                    double latitude = location.getLatitude();
-                    double longitude = location.getLongitude();
-                    //mMap.clear();
-
-                    LatLng latLng = new LatLng(latitude, longitude);
-                    Geocoder geocoder = new Geocoder(getApplicationContext());
-                    try {
-                        List<Address> adressList = geocoder.getFromLocation(latitude, longitude, 1);
-                        String str = adressList.get(0).getLocality() + ", ";
-                        str += adressList.get(0).getCountryName();
-                        mMap.addMarker(new MarkerOptions().position(latLng).title(str).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_VIOLET)));
-                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 12f));
-                        findPlaces(location);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-
-                @Override
-                public void onStatusChanged(String s, int i, Bundle bundle) {
-
-                }
-
-                @Override
-                public void onProviderEnabled(String s) {
-
-                }
-
-                @Override
-                public void onProviderDisabled(String s) {
-
-                }
-            });
-        }
 
 
     }
+
 
     private String downloadUrl(String strUrl) throws IOException{
         String data = "";

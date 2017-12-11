@@ -104,7 +104,8 @@ public class RecipeActivity extends AppCompatActivity {
         btnRecipeAdd.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 startActivity(new Intent(RecipeActivity.this, AddRecipeActivity.class));
-                meals.clear();
+                //meals.clear();
+                //searchBar.setText("");
             }
         });
 
@@ -189,7 +190,6 @@ public class RecipeActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        searchBar.setText("");
     }
 
 
