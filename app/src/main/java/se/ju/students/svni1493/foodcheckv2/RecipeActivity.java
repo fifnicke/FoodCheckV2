@@ -13,7 +13,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -33,14 +32,12 @@ import java.net.HttpURLConnection;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.json.JSONStringer;
 import org.json.JSONTokener;
 
 public class RecipeActivity extends AppCompatActivity {
 
     public static final String TAG = "RecipeActivity";
     public static String searchWord = null;
-    DatabaseHelper mDatabaseHelper;
     Button btnRecipeAdd, btnSearch;
     EditText searchBar;
 
@@ -50,7 +47,7 @@ public class RecipeActivity extends AppCompatActivity {
     private DatabaseReference myRef;
     private String userID;
 
-    public List<Meal> testlista;
+    public List<Meal> jsonList;
 
     private static final String ITEM_ID = "se.ju.students.svni1493.foodcheckv2.itemid";
     private static final String ITEM_NAME = "se.ju.students.svni1493.foodcheckv2.itemname";
@@ -68,9 +65,7 @@ public class RecipeActivity extends AppCompatActivity {
 
         btnRecipeAdd = (Button) findViewById(R.id.btnRecipeAdd);
         btnSearch = (Button) findViewById(R.id.btnSearch);
-        mDatabaseHelper = new DatabaseHelper(this);
         searchBar = (EditText) findViewById(R.id.searchBar);
-
         meals = new ArrayList<>();
 
         mAuth = FirebaseAuth.getInstance();
@@ -84,7 +79,7 @@ public class RecipeActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         meals = new ArrayList<>();
-        testlista = new ArrayList<>();
+        jsonList = new ArrayList<>();
 
         mDatabase = FirebaseDatabase.getInstance().getReference();
 
@@ -124,7 +119,6 @@ public class RecipeActivity extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // This method is called once with the initial value and again
                 // whenever data at this location is updated.
-                Log.d(TAG, "There are: " + dataSnapshot.getChildrenCount() + " items");
 
                 meals.clear();
 
@@ -149,19 +143,14 @@ public class RecipeActivity extends AppCompatActivity {
                     @Override
                     public void afterTextChanged(Editable s) {
 
-                        // filter your list from your input
-                        //String ssss = s.toString();
                         List<Meal> temp = new ArrayList();
                         for(Meal d: meals){
-                            //or use .equal(text) with you want equal match
-                            //use .toLowerCase() for better matches
                             if(d.getMealName().contains(s)){
                                 temp.add(d);
                             }
                         }
                         adapter = new RecyclerViewAdapter(getApplicationContext(), temp);
                         recyclerView.setAdapter(adapter);
-                        //you can use runnable postDelayed like 500 ms to delay search text
                     }
                 });
 
@@ -181,9 +170,8 @@ public class RecipeActivity extends AppCompatActivity {
     }
 
     public void getListFromJson(List<Meal> jsonList) {
-        //toastMessage(jsonList.toString());
-        testlista = jsonList;
-        adapter = new SearchedMealRecycleViewAdapter(getApplicationContext(), testlista);
+        this.jsonList = jsonList;
+        adapter = new SearchedMealRecycleViewAdapter(getApplicationContext(), this.jsonList);
         recyclerView.setAdapter(adapter);
     }
 
@@ -220,7 +208,6 @@ public class RecipeActivity extends AppCompatActivity {
         List<Meal> recipes = new ArrayList<>();
         private Exception exception;
 
-
         protected void onPreExecute() {
         }
 
@@ -252,7 +239,6 @@ public class RecipeActivity extends AppCompatActivity {
             if (response == null) {
                 response = "ERROR";
             }
-            Log.i("info", response);
             try {
                 JSONObject object = (JSONObject) new JSONTokener(response).nextValue();
                 JSONArray hits = object.getJSONArray("hits");

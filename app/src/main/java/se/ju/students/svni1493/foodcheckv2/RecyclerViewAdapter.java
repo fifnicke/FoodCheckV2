@@ -5,6 +5,9 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,9 +19,13 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -32,6 +39,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     Context context;
     List<Meal> meals;
+    List<String> testLista;
+    List<String> weekDays;
 
     public RecyclerViewAdapter(Context context, List<Meal> meals) {
 
@@ -85,22 +94,67 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 alertDialog.setNegativeButton("DELETE", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        //Toast.makeText(context, "Fix delete func " + meal.getMealName(), Toast.LENGTH_LONG).show();
+
 
                         mAuth = FirebaseAuth.getInstance();
                         FirebaseUser user = mAuth.getCurrentUser();
                         userID = user.getUid();
-                        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("users/"+ userID +"/Recipes").child(meal.getMealId());
-                        databaseReference.removeValue();
+
+
                         meals.clear();
-                        // DO SOMETHING HERE
+                        testLista = new ArrayList<>();
+                        weekDays = new ArrayList<String>();
+                        weekDays.add("Friday");
+                        weekDays.add("Monday");
+                        weekDays.add("Saturday");
+                        weekDays.add("Sunday");
+                        weekDays.add("Thursday");
+                        weekDays.add("Tuesday");
+                        weekDays.add("Wednesday");
+
+                        Log.d("Dagar", weekDays.toString());
+                        DatabaseReference myRef = FirebaseDatabase.getInstance().getReference("users/"+ userID +"/Mealplan");
+                        myRef.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                // This method is called once with the initial value and again
+                                // whenever data at this location is updated.
+                                Log.d("Recycler", "There are: " + dataSnapshot.getChildrenCount() + " items");
+
+                                testLista.clear();
+
+                                for (DataSnapshot mealSnapshot : dataSnapshot.getChildren()) {
+                                    String vals = mealSnapshot.getValue().toString();
+                                    Log.d("Skit", vals.toString());
+                                    testLista.add(vals);
+                                }
+                                int testIndex = 0;
+                                for (String a : testLista){
+                                    if(testLista.contains(meal.getMealId())){
+                                        testIndex = testLista.indexOf(meal.getMealId());
+                                        testLista.set(testIndex, "Select Meal");
+                                        Log.d("Index", String.valueOf(testIndex));
+                                        DatabaseReference MealPlanIdRef = FirebaseDatabase.getInstance().getReference("users/"+ userID +"/Mealplan/"+ weekDays.get(testIndex));
+                                        MealPlanIdRef.setValue("Select Meal");
+                                    }
+                                }
+
+
+
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError error) {
+                                // Failed to read value
+                                Log.w("Recycler", "Failed to read value.", error.toException());
+                            }
+                        });
 
                     }
                 });
                 alertDialog.setNeutralButton("EDIT", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        //Toast.makeText(context, "Edit recipe " + meal.getMealName(), Toast.LENGTH_LONG).show();
                         Boolean edit = true;
                         Intent addRecipeIntent = new Intent(context, AddRecipeActivity.class);
                         addRecipeIntent.putExtra("id", meal.getMealId());

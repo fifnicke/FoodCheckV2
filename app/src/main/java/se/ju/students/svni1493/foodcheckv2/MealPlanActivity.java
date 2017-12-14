@@ -45,34 +45,19 @@ public class MealPlanActivity extends AppCompatActivity {
     private static final String ITEM_ID = "se.ju.students.svni1493.foodcheckv2.itemid";
     private static final String ITEM_NAME = "se.ju.students.svni1493.foodcheckv2.itemname";
 
-    private Button btnBack, btnAddToDatabase;
-    private EditText foodText;
-    private ListView listView;
-
-
-
     List<MealPlanItem> mealPlanItems;
 
-    private FirebaseDatabase mFirebaseDatabase;
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
     private DatabaseReference myRef;
     private DatabaseReference myPlanRef;
     private String userID;
 
-    //Test för recycleview med glide och skit
-    private RecyclerView recyclerView;
-    private RecyclerView.Adapter adapter;
-    private ProgressDialog progressDialog;
-    private List<Meal> meals;
-    private DatabaseReference mDatabase;
-    //Test för recycleview med glide och skit
 
-    //Ny skit för mealplan
+    private List<Meal> meals;
+
     private TextView mondayText, tuesdayText,wednesdayText,thursdayText,fridayText,saturdayText,sundayText;
-    private TextView mondayLabel, tuesdayLabel,wednesdayLabel,thursdayLabel,fridayLabel,saturdayLabel,sundayLabel;
     private ImageView mondayImage, tuesdayImage,wednesdayImage,thursdayImage, fridayImage, saturdayImage,sundayImage;
-    //Ny skit för mealplan
 
     private String gotId;
     private String gotName;
@@ -85,15 +70,11 @@ public class MealPlanActivity extends AppCompatActivity {
         setContentView(R.layout.activity_meal_plan);
 
         mAuth = FirebaseAuth.getInstance();
-        mFirebaseDatabase = FirebaseDatabase.getInstance();
-        //myRef = mFirebaseDatabase.getReference();
         FirebaseUser user = mAuth.getCurrentUser();
         userID = user.getUid();
         myPlanRef = FirebaseDatabase.getInstance().getReference("users/"+ userID +"/Mealplan" );
-        //myRef = FirebaseDatabase.getInstance().getReference("users/"+ userID +"/Recipes" );
         myRef = FirebaseDatabase.getInstance().getReference("users/"+ userID);
 
-        //Ny skit för mealplan
         mondayText = (TextView)findViewById(R.id.mondayName);
         tuesdayText = (TextView)findViewById(R.id.tuesdayName);
         wednesdayText = (TextView)findViewById(R.id.wednesdayName);
@@ -101,14 +82,6 @@ public class MealPlanActivity extends AppCompatActivity {
         fridayText = (TextView)findViewById(R.id.fridayName);
         saturdayText = (TextView)findViewById(R.id.saturdayName);
         sundayText = (TextView)findViewById(R.id.sundayName);
-
-        mondayLabel = (TextView)findViewById(R.id.mondayLabel);
-        tuesdayLabel = (TextView)findViewById(R.id.tuesdayLabel);
-        wednesdayLabel = (TextView)findViewById(R.id.wednesdayLabel);
-        thursdayLabel = (TextView)findViewById(R.id.thursdayLabel);
-        fridayLabel = (TextView)findViewById(R.id.fridayLabel);
-        saturdayLabel = (TextView)findViewById(R.id.saturdayLabel);
-        sundayLabel = (TextView)findViewById(R.id.sundayLabel);
 
         mondayImage = (ImageView)findViewById(R.id.mondayImage);
         tuesdayImage = (ImageView)findViewById(R.id.tuesdayImage);
@@ -118,13 +91,8 @@ public class MealPlanActivity extends AppCompatActivity {
         saturdayImage = (ImageView)findViewById(R.id.saturdayImage);
         sundayImage = (ImageView)findViewById(R.id.sundayImage);
 
-        //Ny skit för mealplan
 
         mealPlanItems = new ArrayList<>();
-
-
-
-
 
         LinearLayout app_layer_monday = (LinearLayout) findViewById (R.id.linearMonday);
         app_layer_monday.setOnClickListener(new View.OnClickListener() {
@@ -133,8 +101,6 @@ public class MealPlanActivity extends AppCompatActivity {
                 day = "Monday";
 
                 Intent selectMealIntent = new Intent(getApplicationContext(), SelectMealPlanActivity.class);
-                //selectMealIntent.putExtra("id", meal.getMealId());
-                //selectMealIntent.putExtra("name", meal.getMealName());
                 selectMealIntent.putExtra("day", day);
                 getApplicationContext().startActivity(selectMealIntent);
             }
@@ -146,8 +112,6 @@ public class MealPlanActivity extends AppCompatActivity {
                 day = "Tuesday";
 
                 Intent selectMealIntent = new Intent(getApplicationContext(), SelectMealPlanActivity.class);
-                //selectMealIntent.putExtra("id", meal.getMealId());
-                //selectMealIntent.putExtra("name", meal.getMealName());
                 selectMealIntent.putExtra("day", day);
                 getApplicationContext().startActivity(selectMealIntent);
             }
@@ -159,8 +123,6 @@ public class MealPlanActivity extends AppCompatActivity {
                 day = "Wednesday";
 
                 Intent selectMealIntent = new Intent(getApplicationContext(), SelectMealPlanActivity.class);
-                //selectMealIntent.putExtra("id", meal.getMealId());
-                //selectMealIntent.putExtra("name", meal.getMealName());
                 selectMealIntent.putExtra("day", day);
                 getApplicationContext().startActivity(selectMealIntent);
             }
@@ -172,8 +134,6 @@ public class MealPlanActivity extends AppCompatActivity {
                 day = "Thursday";
 
                 Intent selectMealIntent = new Intent(getApplicationContext(), SelectMealPlanActivity.class);
-                //selectMealIntent.putExtra("id", meal.getMealId());
-                //selectMealIntent.putExtra("name", meal.getMealName());
                 selectMealIntent.putExtra("day", day);
                 getApplicationContext().startActivity(selectMealIntent);
             }
@@ -185,8 +145,6 @@ public class MealPlanActivity extends AppCompatActivity {
                 day = "Friday";
 
                 Intent selectMealIntent = new Intent(getApplicationContext(), SelectMealPlanActivity.class);
-                //selectMealIntent.putExtra("id", meal.getMealId());
-                //selectMealIntent.putExtra("name", meal.getMealName());
                 selectMealIntent.putExtra("day", day);
                 getApplicationContext().startActivity(selectMealIntent);
             }
@@ -198,8 +156,6 @@ public class MealPlanActivity extends AppCompatActivity {
                 day = "Saturday";
 
                 Intent selectMealIntent = new Intent(getApplicationContext(), SelectMealPlanActivity.class);
-                //selectMealIntent.putExtra("id", meal.getMealId());
-                //selectMealIntent.putExtra("name", meal.getMealName());
                 selectMealIntent.putExtra("day", day);
                 getApplicationContext().startActivity(selectMealIntent);
             }
@@ -211,8 +167,6 @@ public class MealPlanActivity extends AppCompatActivity {
                 day = "Sunday";
 
                 Intent selectMealIntent = new Intent(getApplicationContext(), SelectMealPlanActivity.class);
-                //selectMealIntent.putExtra("id", meal.getMealId());
-                //selectMealIntent.putExtra("name", meal.getMealName());
                 selectMealIntent.putExtra("day", day);
                 getApplicationContext().startActivity(selectMealIntent);
             }
@@ -221,38 +175,17 @@ public class MealPlanActivity extends AppCompatActivity {
         Intent recivedIntent = getIntent();
         //get itemId
         if(recivedIntent.hasExtra("id")){
-            gotId = recivedIntent.getStringExtra("id");// -1 is just the default value
+            gotId = recivedIntent.getStringExtra("id");
             addShoppingItem();
         }
         if(recivedIntent.hasExtra("name")){
-            gotName = recivedIntent.getStringExtra("name");// -1 is just the default value
+            gotName = recivedIntent.getStringExtra("name");
         }
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        day = prefs.getString("selectedDay", "no id"); //no id: default value
+        day = prefs.getString("selectedDay", "no id");
 
-        /*
-        btnBack = (Button) findViewById(R.id.mealplan_back);
-        btnAddToDatabase = (Button) findViewById(R.id.mealplan_add_button);
-        foodText = (EditText) findViewById(R.id.mealplan_text);
-        listView = (ListView) findViewById(R.id.mealplan_shoppinglist);*/
-
-
-
-        //Test för recycleview med glide och skit
-        /*
-        recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));*/
-
-        //progressDialog = new ProgressDialog(this);
         meals = new ArrayList<>();
         dailyMeals = new ArrayList<>();
-
-        //progressDialog.setMessage("Please wait...");
-        //progressDialog.show();
-        mDatabase = FirebaseDatabase.getInstance().getReference();
-        //Test för recycleview med glide och skit
-
 
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
@@ -267,52 +200,12 @@ public class MealPlanActivity extends AppCompatActivity {
             }
         };
         final List<String> testMealPlan = new ArrayList<String>();
-        myPlanRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                // This method is called once with the initial value and again
-                // whenever data at this location is updated.
-                //progressDialog.dismiss();
-                Log.d(TAG, "There are: " + dataSnapshot.getChildrenCount()+ " items");
-
-                //mealPlanItems.clear();
-                //testMealPlan.clear();
-                //testMealPlan.clear();
-                //dataSnapshot.child("Monday").getValue();
-                //toastMessage(testMealPlan.toString());
-                for(DataSnapshot mealSnapshot: dataSnapshot.getChildren()){
-                    //String bah = dataSnapshot.child("Monday").getValue().toString();
-                    //toastMessage(bah);
-                    //testMealPlan.add(mealSnapshot.getValue().toString());
-
-                    //MealPlanItem pItem = mealSnapshot.getValue(MealPlanItem.class);
-                    //mealPlanItems.add(pItem);
-                    //toastMessage(pItem.getMonday().toString());
-                }
-                //toastMessage(testMealPlan.toString());
-                //adapter = new RecyclerViewAdapter(getApplicationContext(), meals);
-                //recyclerView.setAdapter(adapter);
-
-                //ShoppingList shoppingAdapter = new ShoppingList(MealPlanActivity.this, shoppingItems);
-                //listView.setAdapter(shoppingAdapter);
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError error) {
-                // Failed to read value
-                //progressDialog.dismiss();
-                Log.w(TAG, "Failed to read value.", error.toException());
-            }
-        });
         // Read from the database
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // This method is called once with the initial value and again
                 // whenever data at this location is updated.
-                //progressDialog.dismiss();
-                Log.d(TAG, "There are: " + dataSnapshot.getChildrenCount()+ " items");
 
                 meals.clear();
                 testMealPlan.clear();
@@ -321,29 +214,31 @@ public class MealPlanActivity extends AppCompatActivity {
                     Meal meal = mealSnapshot.getValue(Meal.class);
                     meals.add(meal);
                 }
-                String bv = String.valueOf(meals.size());
                 List<String> mealPlanInOrder = new ArrayList<String>();
 
                 for(DataSnapshot mealSnapshot: dataSnapshot.child("Mealplan").getChildren()){
                     testMealPlan.add(mealSnapshot.getValue().toString());
                     mealPlanInOrder.add(mealSnapshot.getKey());
                 }
-                for(int i = 0; i < mealPlanInOrder.size(); i++){
-                        String dagensMeal = testMealPlan.get(i);
-                        //mondayText.setText(mealPlanInOrder.get(i));
-                }
+
+                Meal dummyMeal = new Meal("", "Select a meal", "", null, "https://firebasestorage.googleapis.com/v0/b/foodcheckproject.appspot.com/o/foodcheck_logo.png?alt=media&token=c181e99a-441e-4e56-ab11-0df9fceb33e1","", "");
                 for(int i = 0; i < testMealPlan.size(); i++){
+                    int k = 0;
                     for(Meal meal: meals){
-                        Log.d(TAG, "MealID: "+ meal.getMealId());
-                        Log.d(TAG, "testMealID: " +testMealPlan.get(i));
-                        if(meal.getMealId().equals(testMealPlan.get(i))){
-                            Log.d(TAG, "Kanske funkar" + meal.getMealId() + mealPlanInOrder.get(i));
-                            dailyMeals.add(meal);
+                        k++;
+                        if(testMealPlan.get(i).equals("Select Meal")){
+                            dailyMeals.add(dummyMeal);
+                            break;
+                        }else {
+                            if(testMealPlan.contains(meal.getMealId())){
+                                if(k <= meals.size()) {
+                                    if(meal.getMealId().equals(testMealPlan.get(i))){
+                                        dailyMeals.add(meal);
+                                        break;
+                                    }
+                                }
+                            }
                         }
-                        //Log.d(TAG,meal.getMealName());
-                        Log.d(TAG, "Mealplan all meals: " + dailyMeals.size());
-                        //Lägg till ett dummy meal så att hela arrayn blir full
-                        //Eller typ skapa en array med 2 värden per plats, så dagens namn och mealid finns
                     }
                 }
 
@@ -376,78 +271,22 @@ public class MealPlanActivity extends AppCompatActivity {
                     sundayText.setText(dailyMeals.get(3).getMealName());
                     Glide.with(getApplicationContext()).load(dailyMeals.get(3).getMealImageUrl()).into(sundayImage);
                 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                //mondayImage.setIm(dailyMeals.get(1).getMealName());
-
-
-
-
-                Log.d(TAG, mealPlanInOrder.toString());
-                Log.d(TAG, testMealPlan.toString());
-                String asd = String.valueOf(testMealPlan.size());
-
-                for(int i = 0; i < testMealPlan.size(); i++){
-                    String mId = testMealPlan.get(i);
-                    for(Meal d : meals){
-                        if(d.getMealId() != null && d.getMealId().contains(mId)){
-
-                            //toastMessage("Yay " + d.getMealId());
-
-                        }
-                        //something here
-                    }
-                    /*int indexOfTheMeal = meals.indexOf(mId);
-                    String blalaslda = String.valueOf(indexOfTheMeal);
-                    toastMessage(blalaslda);*/
-                    //meals.add(dataSnapshot.child(mId).getValue(Meal.class));
-                }
-
-
-
-                //toastMessage(meals.toString());
-                /*adapter = new RecyclerViewAdapter(getApplicationContext(), meals);
-                recyclerView.setAdapter(adapter);*/
-
-                //ShoppingList shoppingAdapter = new ShoppingList(MealPlanActivity.this, shoppingItems);
-                //listView.setAdapter(shoppingAdapter);
-
             }
-
             @Override
             public void onCancelled(DatabaseError error) {
                 // Failed to read value
-                //progressDialog.dismiss();
                 Log.w(TAG, "Failed to read value.", error.toException());
             }
         });
 
         }
 
-    private void addShoppingItem(){
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        String testDag = prefs.getString("selectedDay", "no id"); //no id: default value
-        myPlanRef.child(testDag).setValue(gotId);
+        private void addShoppingItem(){
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+            String testDag = prefs.getString("selectedDay", "no id"); //no id: default value
+            myPlanRef.child(testDag).setValue(gotId);
 
-    }
-
-
-
+        }
         @Override
         public void onStart() {
             super.onStart();

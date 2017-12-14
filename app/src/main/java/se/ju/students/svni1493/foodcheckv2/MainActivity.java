@@ -45,7 +45,6 @@ public class MainActivity extends AppCompatActivity
 
 
     public static final String TAG = "MainActivity";
-    DatabaseHelper mDatabaseHelper;
     private ListView mListView;
     TextView mUserText, dailyMeal;
     ImageView dailyMealImage;
@@ -77,7 +76,6 @@ public class MainActivity extends AppCompatActivity
 
 
         mAuth = FirebaseAuth.getInstance();
-        //final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
         FirebaseUser user = mAuth.getCurrentUser();
         userID = user.getUid();
@@ -98,13 +96,12 @@ public class MainActivity extends AppCompatActivity
         dailyMeals = new ArrayList<>();
 
 
-        //FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         View headerView = navigationView.getHeaderView(0);
         mUserText = (TextView)headerView.findViewById(R.id.userName);
         mUserText.setText(user.getEmail());
+        final LinearLayout dailyMealMain = (LinearLayout) findViewById (R.id.dailyMealMain);
 
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
@@ -119,14 +116,12 @@ public class MainActivity extends AppCompatActivity
             }
         };
 
-
         // Read from the database
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // This method is called once with the initial value and again
                 // whenever data at this location is updated.
-                Log.d(TAG, "There are: " + dataSnapshot.getChildrenCount()+ " items");
 
                 shoppingItems.clear();
 
@@ -152,8 +147,6 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
-                Log.d(TAG, "There are: " + dataSnapshot.getChildrenCount() + " Meals");
-
                 meals.clear();
 
                 for (DataSnapshot mealSnapshot : dataSnapshot.getChildren()) {
@@ -162,6 +155,29 @@ public class MainActivity extends AppCompatActivity
                 }
             }
 
+            @Override
+            public void onCancelled(DatabaseError error) {
+                // Failed to read value
+                Log.w(TAG, "Failed to read value.", error.toException());
+            }
+        });
+        DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
+        myWeekRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                if (snapshot.hasChild("Mealplan")) {
+
+                }
+                else{
+                    myWeekRef.child("Mealplan").child("Friday").setValue("Select Meal");
+                    myWeekRef.child("Mealplan").child("Monday").setValue("Select Meal");
+                    myWeekRef.child("Mealplan").child("Saturday").setValue("Select Meal");
+                    myWeekRef.child("Mealplan").child("Sunday").setValue("Select Meal");
+                    myWeekRef.child("Mealplan").child("Thursday").setValue("Select Meal");
+                    myWeekRef.child("Mealplan").child("Tuesday").setValue("Select Meal");
+                    myWeekRef.child("Mealplan").child("Wednesday").setValue("Select Meal");
+                }
+            }
             @Override
             public void onCancelled(DatabaseError error) {
                 // Failed to read value
@@ -175,56 +191,41 @@ public class MainActivity extends AppCompatActivity
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // This method is called once with the initial value and again
                 // whenever data at this location is updated.
-                //progressDialog.dismiss();
-                Log.d(TAG, "There are: " + dataSnapshot.getChildrenCount() + " Weekdays");
-
                 dailyMeals.clear();
 
                 for (DataSnapshot mealSnapshot : dataSnapshot.child("Mealplan").getChildren()) {
                     dailyMeals.add(mealSnapshot.getValue().toString());
-
-                    //meals.add(meal);
                 }
-                Log.d(TAG, "Weekdays: "+ dailyMeals.toString());
 
                 Calendar calendar = Calendar.getInstance();
                 int day = calendar.get(Calendar.DAY_OF_WEEK);
 
-
-                switch (day) {
-                    case Calendar.SUNDAY:
-                        todayM = dailyMeals.get(3);
-                        break;
-                    case Calendar.MONDAY:
-                        todayM = dailyMeals.get(1);
-                        break;
-                    case Calendar.TUESDAY:
-                        todayM = dailyMeals.get(5);
-                        break;
-                    case Calendar.WEDNESDAY:
-                        todayM = dailyMeals.get(6);
-                        break;
-                    case Calendar.THURSDAY:
-                        todayM = dailyMeals.get(4);
-                        break;
-                    case Calendar.FRIDAY:
-                        todayM = dailyMeals.get(0);
-                        break;
-                    case Calendar.SATURDAY:
-                        todayM = dailyMeals.get(2);
-                        break;
+                if(dailyMeals.size() == 7){
+                    switch (day) {
+                        case Calendar.SUNDAY:
+                            todayM = dailyMeals.get(3);
+                            break;
+                        case Calendar.MONDAY:
+                            todayM = dailyMeals.get(1);
+                            break;
+                        case Calendar.TUESDAY:
+                            todayM = dailyMeals.get(5);
+                            break;
+                        case Calendar.WEDNESDAY:
+                            todayM = dailyMeals.get(6);
+                            break;
+                        case Calendar.THURSDAY:
+                            todayM = dailyMeals.get(4);
+                            break;
+                        case Calendar.FRIDAY:
+                            todayM = dailyMeals.get(0);
+                            break;
+                        case Calendar.SATURDAY:
+                            todayM = dailyMeals.get(2);
+                            break;
+                    }
                 }
-                for (DataSnapshot mealSnapshot : dataSnapshot.child("Recipes").getChildren()) {
-                    //Log.d(TAG, "There are:" + dataSnapshot.getChildrenCount());
-                    //Meal kiss = mealSnapshot.child(todayM).getValue(Meal.class);
-                    //Log.d(TAG, kiss.toString());
 
-                    //Meal bajs = mealSnapshot.getValue(Meal.class);
-                    //Log.d(TAG, bajs.getMealName());
-                    //dailyMeals.add(mealSnapshot.getValue().toString());
-
-                    //meals.add(meal);
-                }
                 meals.clear();
 
                 for (DataSnapshot mealSnapshot : dataSnapshot.child("Recipes").getChildren()) {
@@ -238,20 +239,24 @@ public class MainActivity extends AppCompatActivity
                         break;
                     }
                 }
-                dailyMeal.setText(dM.getMealName());
-                Glide.with(getApplicationContext()).load(dM.getMealImageUrl()).into(dailyMealImage);
-
-
+                if(dM != null){
+                    dailyMealMain.setEnabled(true);
+                    dailyMeal.setText(dM.getMealName());
+                    Glide.with(getApplicationContext()).load(dM.getMealImageUrl()).into(dailyMealImage);
+                }else {
+                    dailyMealMain.setEnabled(false);
+                    dailyMeal.setText("No meal selected for today");
+                    dailyMealImage.setImageResource(R.mipmap.foodcheck_logo);
+                }
             }
 
             @Override
             public void onCancelled(DatabaseError error) {
                 // Failed to read value
-                //progressDialog.dismiss();
                 Log.w(TAG, "Failed to read value.", error.toException());
             }
         });
-        LinearLayout dailyMealMain = (LinearLayout) findViewById (R.id.dailyMealMain);
+
         dailyMealMain.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -309,13 +314,11 @@ public class MainActivity extends AppCompatActivity
 
         if (id == R.id.nav_home) {
             // Handle the home action
-            //Write code to check if user is in main activity, if that is true just close the drawer
             Intent intent = new Intent(this, MainActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
 
         }else if (id == R.id.nav_mealplan) {
-            //intent to mealplan
             Intent intent = new Intent(this, MealPlanActivity.class);
             startActivity(intent);
         }  else if (id == R.id.nav_recipes) {
@@ -326,20 +329,13 @@ public class MainActivity extends AppCompatActivity
             startActivity(intent);
 
         } else if (id == R.id.nav_maps) {
-            //start map activity
-
             Intent intent = new Intent(this, MapsActivity.class);
             startActivity(intent);
-
         }
-
         else if (id == R.id.nav_manage) {
             Intent intent = new Intent(this, ToolsActivity.class);
             startActivity(intent);
-        } else if (id == R.id.nav_share) {
-
         }
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;

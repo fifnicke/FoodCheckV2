@@ -23,7 +23,6 @@
         <activity android:name=".RecipeActivity" />
         <activity android:name=".ShoppingListActivity" />
         <activity android:name=".RecipeDetailsActivity" />
-        <activity android:name=".EditDataActivity" />
         <activity android:name=".AddRecipeActivity" />
         <activity android:name=".LoginActivity">
             <intent-filter>

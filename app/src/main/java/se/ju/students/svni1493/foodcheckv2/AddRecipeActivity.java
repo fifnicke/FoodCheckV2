@@ -1,7 +1,9 @@
 package se.ju.students.svni1493.foodcheckv2;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -51,21 +53,15 @@ import java.util.List;
 
 public class AddRecipeActivity extends AppCompatActivity {
 
-    DatabaseHelper mDatabaseHelper;
-
     EditText addRecipeName,addRecipeInstructions, addIngredientText;
     ImageView addRecipeImage;
     Button addRecipeImageButton, btnRecipeCancel,btnRecipeSave, btnIngredientAdd;
     ListView ingredientListView;
 
-    //arraylist and adapter for ingredients
     ArrayList<String> arrayList;
     ArrayAdapter<String> adapter;
 
-    //List<ShoppingItem> shoppingItems;
-
     public static final String TAG = "AddRecipeActivity";
-    private FirebaseDatabase mFirebaseDatabase;
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
     private DatabaseReference myRef;
@@ -73,18 +69,10 @@ public class AddRecipeActivity extends AppCompatActivity {
 
     List<Meal> meals;
 
-    private static final String ITEM_ID = "se.ju.students.svni1493.foodcheckv2.itemid";
-    private static final String ITEM_NAME = "se.ju.students.svni1493.foodcheckv2.itemname";
-
-
-
-    final int REQUEST_CODE_GALLERY = 999;
     Uri imageUri;
-    private StorageReference mStorageRef;
 
     int PICK_IMAGE_REQUEST = 111;
     Uri filePath;
-    ProgressDialog pd;
     FirebaseStorage storage = FirebaseStorage.getInstance();
     StorageReference storageRef = storage.getReference();
     String imagePath;
@@ -102,7 +90,6 @@ public class AddRecipeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_recipe);
-        mDatabaseHelper = new DatabaseHelper(this);
 
         addRecipeName = (EditText) findViewById(R.id.addRecipeName);
         addRecipeInstructions = (EditText) findViewById(R.id.addRecipeInstructions);
@@ -116,25 +103,17 @@ public class AddRecipeActivity extends AppCompatActivity {
         ingredientListView = (ListView) findViewById(R.id.ingredientListView);
 
         mAuth = FirebaseAuth.getInstance();
-        mFirebaseDatabase = FirebaseDatabase.getInstance();
-        //myRef = mFirebaseDatabase.getReference();
         FirebaseUser user = mAuth.getCurrentUser();
         userID = user.getUid();
         myRef = FirebaseDatabase.getInstance().getReference("users/"+ userID +"/Recipes" );
-
-        mStorageRef = FirebaseStorage.getInstance().getReference();
-
         meals = new ArrayList<>();
         imageUri = null;
-
         arrayList = new ArrayList<String>();
 
         //get the intent extras
-
         Intent recivedIntent = getIntent();
         //get itemId
-        selectedID = recivedIntent.getStringExtra("id");// -1 is just the default value
-        //toastMessage(String.valueOf(selectedID));
+        selectedID = recivedIntent.getStringExtra("id");
         //get name
         selectedName = recivedIntent.getStringExtra("name");
 
@@ -142,10 +121,6 @@ public class AddRecipeActivity extends AppCompatActivity {
         if(recivedIntent.hasExtra("edit")){
             editMode = recivedIntent.getExtras().getBoolean("edit");
         }
-
-
-        //toastMessage(selectedName);
-
 
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
@@ -169,15 +144,7 @@ public class AddRecipeActivity extends AppCompatActivity {
                 return false;
             }
         });
-        /* Options for edit and delete in listview
-        ingredientListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
-                ShoppingItem shoppingItem = shoppingItems.get(i);
-                displayEditDialog(shoppingItem.getItemId(), shoppingItem.getItemName());
-                return true;
-            }
-        });*/
+
         myMealRef = FirebaseDatabase.getInstance().getReference("users/"+ userID +"/Recipes/"+selectedID );
 
         // Read from the database
@@ -193,24 +160,9 @@ public class AddRecipeActivity extends AppCompatActivity {
                     String mInstructions= dataSnapshot.child("mealInstructions").getValue(String.class);
                     addRecipeName.setText(mName);
                     addRecipeInstructions.setText(mInstructions);
-                    //arrayList = dataSnapshot.getChildren("mealIngredients");
                     Glide.with(getApplicationContext()).load(selectedUrl).into(addRecipeImage);
-                    //toastMessage("Receptnamn: "+ namnet);
+
                 }
-
-                /*
-                for(DataSnapshot mealSnapshot: dataSnapshot.getChildren()){
-                    Meal meal = mealSnapshot.getValue(Meal.class);
-                    meals.add(meal);
-                }
-                toastMessage("Det funka nog");
-                if(editMode){
-
-                }*/
-
-                //ShoppingList shoppingAdapter = new ShoppingList(ShoppingListActivity.this, shoppingItems);
-                //listView.setAdapter(shoppingAdapter);*/
-
             }
 
             @Override
@@ -240,6 +192,34 @@ public class AddRecipeActivity extends AppCompatActivity {
 
         adapter = new ArrayAdapter<String>(AddRecipeActivity.this, android.R.layout.simple_list_item_1,arrayList);
         ingredientListView.setAdapter(adapter);
+
+        ingredientListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+                final String item = arrayList.get(i);
+                AlertDialog.Builder alertDialog = new AlertDialog.Builder(view.getContext());
+                alertDialog.setTitle(item);
+                alertDialog.setMessage("Delete " + item+"?");
+                alertDialog.setPositiveButton("CANCEL", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+                alertDialog.setNegativeButton("DELETE", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        arrayList.remove(item);
+                        adapter.notifyDataSetChanged();
+                    }
+                });
+
+                AlertDialog dialog = alertDialog.create();
+                dialog.show();
+                return true;
+            }
+        });
+
 
         // Read from the database
         listRef = myMealRef.child("mealIngredients");
@@ -294,16 +274,10 @@ public class AddRecipeActivity extends AppCompatActivity {
                         intent.setType("image/*");
                         intent.setAction(Intent.ACTION_PICK);
                         startActivityForResult(Intent.createChooser(intent, "Select Image"), PICK_IMAGE_REQUEST);
-                        //Intent galleryIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                        //startActivityForResult(galleryIntent, PICK_FROM_GALLERY);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                //Intent intent = new Intent();
-                //intent.setType("image/*");
-                //intent.setAction(Intent.ACTION_PICK);
-                //startActivityForResult(Intent.createChooser(intent, "Select Image"), PICK_IMAGE_REQUEST);
             }
         });
     }
@@ -323,7 +297,6 @@ public class AddRecipeActivity extends AppCompatActivity {
 
     private void addMealItem(){
 
-
         String id = myRef.push().getKey();
 
         if(filePath != null && !editMode){
@@ -336,11 +309,9 @@ public class AddRecipeActivity extends AppCompatActivity {
                     Uri downloadUri = taskSnapshot.getDownloadUrl();
                     imageUri = downloadUri;
                     imagePath = downloadUri.toString();
-                    //System.out.println(imagePath);
                     String id = myRef.push().getKey();
                     String image = "placeholder url";
                     String day = "placeholderDay";
-                    //String id = myRef.push().getKey();
                     String name = addRecipeName.getText().toString();
                     String instructions = addRecipeInstructions.getText().toString();
                     String href = "www";
@@ -350,17 +321,16 @@ public class AddRecipeActivity extends AppCompatActivity {
                         Meal meal = new Meal(id, name, instructions, arrayList, taskSnapshot.getDownloadUrl().toString(),day, href);
                         myRef.child(id).setValue(meal);
                         addRecipeName.setText("");
-                        //Message("Added "+ name + " to firebase!");
+                        toastMessage("Recipe "+ name + " added!");
                         finish();
                     }else {
                         toastMessage("You need to add a name!");
                     }
-                    //Toast.makeText(AddRecipeActivity.this, "Upload successful", Toast.LENGTH_SHORT).show();
                 }
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
-                    //Toast.makeText(AddRecipeActivity.this, "Upload Failed -> " + e, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AddRecipeActivity.this, "Upload Failed -> " + e, Toast.LENGTH_SHORT).show();
                 }
             });
         }else if(editMode){
@@ -375,10 +345,10 @@ public class AddRecipeActivity extends AppCompatActivity {
                     Meal meal = new Meal(id, name, instructions, arrayList,selectedUrl, day, href);
                     myRef.child(id).setValue(meal);
                     addRecipeName.setText("");
-                    //toastMessage("Added "+ name + " to firebase!");
+                    toastMessage("Recipe "+ name + " added!");
                     finish();
                 }else {
-                    //toastMessage("You need to add a name!");
+                    toastMessage("You need to add a name!");
                 }
             }else{
                 id = myRef.push().getKey();
@@ -391,11 +361,9 @@ public class AddRecipeActivity extends AppCompatActivity {
                         Uri downloadUri = taskSnapshot.getDownloadUrl();
                         imageUri = downloadUri;
                         imagePath = downloadUri.toString();
-                        //System.out.println(imagePath);
                         String id = selectedID;
                         String image = "placeholder url";
                         String day = "placeholderDay";
-                        //String id = myRef.push().getKey();
                         String name = addRecipeName.getText().toString();
                         String instructions = addRecipeInstructions.getText().toString();
                         String href = "www";
@@ -405,86 +373,22 @@ public class AddRecipeActivity extends AppCompatActivity {
                             Meal meal = new Meal(id, name, instructions, arrayList, taskSnapshot.getDownloadUrl().toString(),day, href);
                             myRef.child(id).setValue(meal);
                             addRecipeName.setText("");
-                            //toastMessage("Added "+ name + " to firebase!");
+                            toastMessage("Recipie "+ name + " added!");
                             finish();
                         }else {
-                            //toastMessage("You need to add a name!");
+                            toastMessage("You need to add a name!");
                         }
-                        //Toast.makeText(AddRecipeActivity.this, "Upload successful", Toast.LENGTH_SHORT).show();
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        //Toast.makeText(AddRecipeActivity.this, "Upload Failed -> " + e, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(AddRecipeActivity.this, "Upload Failed -> " + e, Toast.LENGTH_SHORT).show();
                     }
                 });
-
             }
-
-
         } else{
             toastMessage("Select an image");
         }
-
-        //System.out.println(imagePath);
-        //Uri kiss = imageUri;
-        //String bajs = kiss.toString();
-        //System.out.println(bajs);
-/*
-        if(!TextUtils.isEmpty(name)){
-
-            Meal meal = new Meal(id, name, instructions, arrayList, image);
-            myRef.child(id).setValue(meal);
-            addRecipeName.setText("");
-            toastMessage("Added "+ name + " to firebase!");
-            finish();
-        }else {
-            toastMessage("You need to add a name!");
-        }*/
-        /*
-        storageRef.child("users/me/profile.png").getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-            @Override
-            public void onSuccess(Uri uri) {
-                // Got the download URL for 'users/me/profile.png'
-                Uri downloadUri = taskSnapshot.getMetadata().getDownloadUrl();
-                generatedFilePath = downloadUri.toString(); /// The string(file link) that you need
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception exception) {
-                // Handle any errors
-            }
-        });*/
-
-    }
-
-
-    //func to convert image to byte[]
-    public static byte[] imageToByte(ImageView image){
-        Bitmap bitmap = ((BitmapDrawable)image.getDrawable()).getBitmap();
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-        byte[] byteArray = stream.toByteArray();
-        return byteArray;
-    }
-
-    //Code for getting image from gallery
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-
-        if(requestCode == REQUEST_CODE_GALLERY){
-            if(grantResults.length >0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
-                /*Intent intent = new Intent(Intent.ACTION_PICK);
-                intent.setType("image/*");
-                startActivityForResult(intent, REQUEST_CODE_GALLERY);*/
-            }
-            else {
-                Toast.makeText(getApplicationContext(), "You don't have permission to access file location!", Toast.LENGTH_SHORT).show();
-            }
-            return;
-        }
-
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
     @Override
@@ -498,35 +402,11 @@ public class AddRecipeActivity extends AppCompatActivity {
 
                 addRecipeImage.setImageBitmap(bitmap);
 
-                //Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
-                //addRecipeImage.setImageBitmap(bitmap);
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
     }
-
-    //function to convert ingredientArray to a string so it can be stored in DB
-    public static String strSeparator = "__,__";
-    public static String convertArrayToString(String[] array){
-        String str = "";
-        for (int i = 0;i<array.length; i++) {
-            str = str+array[i];
-            // Do not append comma at the end of last element
-            if(i<array.length-1){
-                str = str+strSeparator;
-            }
-        }
-        return str;
-    }
-
-    //function to convert the string of ingredients to an array again
-    public static String[] convertStringToArray(String str){
-        String[] arr = str.split(strSeparator);
-        return arr;
-    }
-
-
     //toast
     private void toastMessage(String message){
         Toast.makeText(this,message,Toast.LENGTH_SHORT).show();

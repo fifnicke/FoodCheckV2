@@ -64,7 +64,6 @@ public class ShoppingListActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
         mFirebaseDatabase = FirebaseDatabase.getInstance();
-        //myRef = mFirebaseDatabase.getReference();
         FirebaseUser user = mAuth.getCurrentUser();
         userID = user.getUid();
         myRef = FirebaseDatabase.getInstance().getReference("users/"+ userID +"/ShoppingList" );
@@ -88,8 +87,6 @@ public class ShoppingListActivity extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // This method is called once with the initial value and again
                 // whenever data at this location is updated.
-                Log.d(TAG, "There are: " + dataSnapshot.getChildrenCount()+ " items");
-
                 shoppingItems.clear();
 
                 for(DataSnapshot shoppingSnapshot: dataSnapshot.getChildren()){
@@ -99,7 +96,6 @@ public class ShoppingListActivity extends AppCompatActivity {
 
                 ShoppingList shoppingAdapter = new ShoppingList(ShoppingListActivity.this, shoppingItems);
                 listView.setAdapter(shoppingAdapter);
-
             }
 
             @Override
@@ -120,7 +116,6 @@ public class ShoppingListActivity extends AppCompatActivity {
         btnAddToDatabase.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.d(TAG, "onClick: Attempting to add to database.");
                 addShoppingItem();
 
             }
@@ -156,7 +151,6 @@ public class ShoppingListActivity extends AppCompatActivity {
     private boolean deleteItem(String id) {
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("users/"+ userID +"/ShoppingList").child(id);
         databaseReference.removeValue();
-
         return true;
     }
 
@@ -188,7 +182,6 @@ public class ShoppingListActivity extends AppCompatActivity {
         btnDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 deleteItem(itemID);
                 dialog.dismiss();
             }
