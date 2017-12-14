@@ -1,7 +1,9 @@
 package se.ju.students.svni1493.foodcheckv2;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
@@ -11,12 +13,14 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.AsyncTask;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -43,6 +47,7 @@ import java.util.List;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
+    private int MAPS_PERMISSION_CODE = 1;
     private static final String TAG = "MapsActivity";
     private GoogleMap mMap;
 
@@ -56,34 +61,127 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
         mPlaceType = getResources().getStringArray(R.array.place_type);
         mPlaceTypeName = getResources().getStringArray(R.array.place_type_name);
-        int hasLocationPermission = ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION);
 
-        try {
+        if(ContextCompat. checkSelfPermission(MapsActivity.this, Manifest.permission.ACCESS_FINE_LOCATION ) == PackageManager.PERMISSION_GRANTED){
+            Log.d(TAG, "Permission already granted");
+            locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+            //check if network provider is enabled
+            if(locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)){
+                locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, new LocationListener() {
+                    @Override
+                    public void onLocationChanged(Location location) {
+                        double latitude = location.getLatitude();
+                        double longitude = location.getLongitude();
+                        LatLng latLng = new LatLng(latitude, longitude);
+                        Geocoder geocoder = new Geocoder(getApplicationContext());
+                        try {
+                            List<Address> adressList = geocoder.getFromLocation(latitude, longitude, 1);
+                            String str = adressList.get(0).getLocality()+", ";
+                            str += adressList.get(0).getCountryName();
+                            mMap.addMarker(new MarkerOptions().position(latLng).title(str).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_VIOLET)));
+                            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 12f));
+                            findPlaces(location);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    @Override
+                    public void onStatusChanged(String s, int i, Bundle bundle) {
+
+                    }
+
+                    @Override
+                    public void onProviderEnabled(String s) {
+
+                    }
+
+                    @Override
+                    public void onProviderDisabled(String s) {
+
+                    }
+                });
+            }else if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)){
+                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, new LocationListener() {
+                    @Override
+                    public void onLocationChanged(Location location) {
+                        double latitude = location.getLatitude();
+                        double longitude = location.getLongitude();
+
+                        LatLng latLng = new LatLng(latitude, longitude);
+                        Geocoder geocoder = new Geocoder(getApplicationContext());
+                        try {
+                            List<Address> adressList = geocoder.getFromLocation(latitude, longitude, 1);
+                            String str = adressList.get(0).getLocality() + ", ";
+                            str += adressList.get(0).getCountryName();
+                            mMap.addMarker(new MarkerOptions().position(latLng).title(str).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_VIOLET)));
+                            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 12f));
+                            findPlaces(location);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    @Override
+                    public void onStatusChanged(String s, int i, Bundle bundle) {
+
+                    }
+
+                    @Override
+                    public void onProviderEnabled(String s) {
+
+                    }
+
+                    @Override
+                    public void onProviderDisabled(String s) {
+
+                    }
+                });
+            }
+        }else {
+            requestMapsPermission();
+        }
+    }
+
+    private void requestMapsPermission(){
+        if(ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)){
+            new AlertDialog.Builder(this)
+                    .setTitle("Permission needed!")
+                    .setMessage("This permission is needed so that you can see nearby stores.")
+                    .setPositiveButton("ok", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            ActivityCompat.requestPermissions(MapsActivity.this,
+                                    new String[] {Manifest.permission.ACCESS_FINE_LOCATION}, MAPS_PERMISSION_CODE);
+                        }
+                    })
+                    .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.dismiss();
+                        }
+                    })
+                    .create().show();
+        }else{
+            ActivityCompat.requestPermissions(this,new String[] {Manifest.permission.ACCESS_FINE_LOCATION}, MAPS_PERMISSION_CODE);
+        }
+    }
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults){
+        if(requestCode == MAPS_PERMISSION_CODE){
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(this, "Permission GRANTED", Toast.LENGTH_SHORT).show();
+                try {
             if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(MapsActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION},1);
+                //ActivityCompat.requestPermissions(MapsActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION},1);
             } else {
                 locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-                /*
-                if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                    // TODO: Consider calling
-                    //    ActivityCompat#requestPermissions
-                    // here to request the missing permissions, and then overriding
-                    //
-                    //  public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                    //                                          int[] grantResults)
-                    // to handle the case where the user grants the permission. See the documentation
-                    // for ActivityCompat#requestPermissions for more details.
-                    Log.d(TAG, "hmmm");
-                    return;
-                }*/
-
                 //check if network provider is enabled
                 if(locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)){
                     locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, new LocationListener() {
@@ -91,7 +189,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         public void onLocationChanged(Location location) {
                             double latitude = location.getLatitude();
                             double longitude = location.getLongitude();
-                            //mMap.clear();
                             LatLng latLng = new LatLng(latitude, longitude);
                             Geocoder geocoder = new Geocoder(getApplicationContext());
                             try {
@@ -127,7 +224,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         public void onLocationChanged(Location location) {
                             double latitude = location.getLatitude();
                             double longitude = location.getLongitude();
-                            //mMap.clear();
 
                             LatLng latLng = new LatLng(latitude, longitude);
                             Geocoder geocoder = new Geocoder(getApplicationContext());
@@ -164,13 +260,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             e.printStackTrace();
         }
 
-
-
-
-
-
+            } else {
+                Toast.makeText(this, "Permission DENIED", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
-
 
     private String downloadUrl(String strUrl) throws IOException{
         String data = "";
@@ -202,7 +296,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         String data = null;
 
-        // Invoked by execute() method of this object
         @Override
         protected String doInBackground(String... url) {
             try{
@@ -213,13 +306,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             return data;
         }
 
-        // Executed after the complete execution of doInBackground() method
         @Override
         protected void onPostExecute(String result){
             ParserTask parserTask = new ParserTask();
 
-            // Start parsing the Google places in JSON format
-            // Invokes the "doInBackground()" method of the class ParseTask
             parserTask.execute(result);
         }
 
@@ -249,45 +339,29 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             return places;
         }
 
-        // Executed after the complete execution of doInBackground() method
         @Override
         protected void onPostExecute(List<HashMap<String,String>> list){
 
-            // Clears all the existing markers
-            //mMap.clear();
-
-
-
             for(int i=0;i<list.size();i++){
 
-                // Creating a marker
                 MarkerOptions markerOptions = new MarkerOptions();
 
-                // Getting a place from the places list
                 HashMap<String, String> hmPlace = list.get(i);
 
-                // Getting latitude of the place
                 double lat = Double.parseDouble(hmPlace.get("lat"));
 
-                // Getting longitude of the place
                 double lng = Double.parseDouble(hmPlace.get("lng"));
 
-                // Getting name
                 String name = hmPlace.get("place_name");
 
-                // Getting vicinity
                 String vicinity = hmPlace.get("vicinity");
 
                 LatLng latLng = new LatLng(lat, lng);
 
-                // Setting the position for the marker
                 markerOptions.position(latLng);
 
-                // Setting the title for the marker.
-                //This will be displayed on taping the marker
                 markerOptions.title(name + " : " + vicinity);
 
-                // Placing a marker on the touched position
                 mMap.addMarker(markerOptions);
             }
         }
@@ -307,28 +381,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         sb.append("&sensor=true");
         sb.append("&key=AIzaSyCqhmeaLvCloG-dmn3FARTku0mP9MhTIfk");
 
-        // Creating a new non-ui thread task to download json data
         PlacesTask placesTask = new PlacesTask();
 
-        // Invokes the "doInBackground()" method of the class PlaceTask
         placesTask.execute(sb.toString());
     }
 
-    /**
-     * Manipulates the map once available.
-     * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
-     * If Google Play services is not installed on the device, the user will be prompted to install
-     * it inside the SupportMapFragment. This method will only be triggered once the user has
-     * installed Google Play services and returned to the app.
-     */
     @Override
     public void onMapReady(GoogleMap googleMap) {
 
         try {
-            // Customise the styling of the base map using a JSON object defined
-            // in a raw resource file.
             boolean success = googleMap.setMapStyle(
                     MapStyleOptions.loadRawResourceStyle(
                             this, R.raw.style_json));
@@ -339,15 +400,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         } catch (Resources.NotFoundException e) {
             Log.e(TAG, "Can't find style. Error: ", e);
         }
-        // Position the map's camera near Sydney, Australia.
-        //googleMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(-34, 151)));
 
         mMap = googleMap;
-
-        // Add a marker in Sydney and move the camera
-        //LatLng sydney = new LatLng(-34, 151);
-        //mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        //mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
-        //mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney, 10f));
     }
 }

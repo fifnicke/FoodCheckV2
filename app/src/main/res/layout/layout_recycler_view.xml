@@ -10,7 +10,7 @@
         <LinearLayout
             android:id="@+id/linearLayoutRecycleView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="100dp"
             android:background="@drawable/shadowoutlineblue"
             android:padding="0dip"
             android:orientation="horizontal"
