@@ -42,7 +42,7 @@
                 android:id="@+id/tools_email"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Email"
+                android:hint="@string/newPass"
                 android:inputType="textEmailAddress"
                 android:maxLines="1"
                 android:singleLine="true"
@@ -56,7 +56,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:text="Change email"
+                android:text="@string/changePass"
                 android:textStyle="bold"
                 android:background="@drawable/confirm_btn"
                 android:textColor="#FFF"/>
@@ -69,24 +69,14 @@
                 android:id="@+id/tools_back"
                 style="?android:textAppearanceSmall"
                 android:layout_width="0dip"
-                android:layout_weight=".5"
+                android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:text="Back"
+                android:text="@string/back"
                 android:textStyle="bold"
                 android:background="@drawable/button"
                 android:textColor="#FFF"/>
-                <Button
-                    android:id="@+id/tools_sign_out"
-                    style="?android:textAppearanceSmall"
-                    android:layout_width="0dip"
-                    android:layout_weight=".5"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:text="Sign out"
-                    android:textStyle="bold"
-                    android:background="@drawable/cancel_btn"
-                    android:textColor="#FFF"/>
+
             </LinearLayout>
             <ProgressBar
                 android:id="@+id/tools_progressBar"

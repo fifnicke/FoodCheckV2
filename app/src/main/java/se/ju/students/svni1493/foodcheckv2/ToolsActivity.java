@@ -47,7 +47,6 @@ public class ToolsActivity extends AppCompatActivity {
             }
         };
 
-        btnSignOut = (Button) findViewById(R.id.tools_sign_out);
         btnChangeEmail = (Button) findViewById(R.id.tools_change_email);
         btnBack = (Button) findViewById(R.id.tools_back);
         mEmail = (EditText) findViewById(R.id.tools_email);
@@ -64,33 +63,26 @@ public class ToolsActivity extends AppCompatActivity {
                 hideSoftKeyBoard();
                 String enteredEmail = mEmail.getText().toString().trim();
                 if (user != null && !enteredEmail.equals("")) {
-                    user.updateEmail(enteredEmail)
+                    user.updatePassword(mEmail.getText().toString().trim())
                             .addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
                                     if (task.isSuccessful()) {
-                                        toastMessage("Email adress changed. Please sign in again with your new Email!");
+                                        Toast.makeText(ToolsActivity.this, "Password is updated!", Toast.LENGTH_SHORT).show();
                                         signOut();
-                                        progressBar.setVisibility(View.GONE);
                                     } else {
-                                        toastMessage("Failed to update Email");
+                                        Toast.makeText(ToolsActivity.this, "Failed to update password! Try signing out and signing in before you chance password", Toast.LENGTH_SHORT).show();
                                         progressBar.setVisibility(View.GONE);
                                     }
                                 }
                             });
                 } else if (mEmail.getText().toString().trim().equals("")) {
-                    mEmail.setError("Enter email");
+                    mEmail.setError("Enter a new password!");
                     progressBar.setVisibility(View.GONE);
                 }
             }
         });
-        btnSignOut.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                signOut();
-                hideSoftKeyBoard();
-            }
-        });
+
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

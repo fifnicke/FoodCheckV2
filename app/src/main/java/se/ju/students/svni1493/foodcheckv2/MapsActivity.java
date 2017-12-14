@@ -69,7 +69,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mPlaceTypeName = getResources().getStringArray(R.array.place_type_name);
 
         if(ContextCompat. checkSelfPermission(MapsActivity.this, Manifest.permission.ACCESS_FINE_LOCATION ) == PackageManager.PERMISSION_GRANTED){
-            Log.d(TAG, "Permission already granted");
+            Log.d(TAG, "Finding nearby stores...");
             locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
             //check if network provider is enabled
             if(locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)){
@@ -176,7 +176,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults){
         if(requestCode == MAPS_PERMISSION_CODE){
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Toast.makeText(this, "Permission GRANTED", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Finding nearby stores...", Toast.LENGTH_SHORT).show();
                 try {
             if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 //ActivityCompat.requestPermissions(MapsActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION},1);

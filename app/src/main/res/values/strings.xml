@@ -1,13 +1,96 @@
 <resources>
-    <string name="app_name">FoodCheckV2</string>
-    <string name="todays_meal">Today\'s Meal</string>
-    <string name="recipes">Recipes</string>
+
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="action_settings">Settings</string>
     <string name="shopping_list">Shopping List</string>
+
+    <string name="cancel">CANCEL</string>
+    <string name="save">SAVE</string>
+    <string name="back">BACK</string>
+    <string name="add">ADD</string>
+    <string name="nameLabel">Name</string>
+    #AddRecipie
+
+    <string name="recipeDetails">Recipe Details</string>
+    <string name="recipeDetailsTitleHint">Add Recipe Title</string>
+    <string name="recipeDetailsImageTitle">Recipe Image</string>
+    <string name="recipeDetailsAddImageButtonText">Add image</string>
+    <string name="recipeDetailsInstructionsLabel">Recipe Instructions</string>
+    <string name="recipeDetailsInstructionsHint">Add Instructions</string>
+    <string name="recipeDetailsIngredientLabel">Ingredients</string>
+    <string name="recipeDetailsIngredientHint">Add Ingredient</string>
+
+    #login
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="signIn">SIGN IN</string>
+    <string name="forgotPassword">Forgot password?</string>
+    <string name="registerAccount">Register account</string>
+
+    <string name="app_name">FoodCheck</string>
+    <string name="todays_meal">Today\'s Meal</string>
+
+    #drawer
+    <string name="home">Home</string>
+    <string name="mealPlan">Meal Plan</string>
+    <string name="recipes">Recipes</string>
+    <string name="shoppingList">Shopping List</string>
+    <string name="nearby">Nearby Stores</string>
+    <string name="tools">Tools</string>
+    <string name="signOut">Sign out</string>
+
+    #mealplan
+    <string name="monday">Monday</string>
+    <string name="tuesday">Tuesday</string>
+    <string name="wednesday">Wednesday</string>
+    <string name="thursday">Thursday</string>
+    <string name="friday">Friday</string>
+    <string name="saturday">Saturday</string>
+    <string name="sunday">Sunday</string>
+
+    #Recipies
+    <string name="searchRecipies">Search for recipes</string>
+    <string name="searchOnline">Search online</string>
+    <string name="addCustom">Add custom recipe</string>
+
+    #addRecipe
+    <string name="instructions">Instructions:</string>
+    <string name="instructions1">Instructions</string>
+    <string name="ingredients">Ingredients:</string>
+
+    #reset
+    <string name="forgotInstructions">Type in your registered Email to send reset instructions.</string>
+    <string name="resetPass">Reset Password</string>
+
+    #select
+    <string name="selectMeal">Select Meal</string>
+    <string name="filtrate">Type to filtrate</string>
+
+    #shoppinglist
+    <string name="addItem">Add item</string>
+
+    #signup
+    <string name="linkLogin">Link to login</string>
+    <string name="signUp">Sign Up</string>
+
+    #tools
+    <string name="newPass">New password</string>
+    <string name="changePass">Change password</string>
+
+    <string name="shoppL">Shopping list:</string>
+    <string name="plName">Placeholder name</string>
+    <string name="day">Day</string>
+
+
+
+    <string name="shoppinglist">ShoppingList</string>
+
+
+
+
     <string-array name="shopping_list_placeholder">
         <item>Korv</item>
         <item>Bröd</item>

@@ -18,7 +18,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="name"
+                android:text="@string/nameLabel"
                 android:textAlignment="center"
                 android:textSize="20dp"
                 android:id="@+id/recipeDetailsName"
@@ -37,7 +37,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Instructions:"
+                android:text="@string/instructions"
                 android:textAlignment="center"
                 android:id="@+id/instructionslabel"
                 android:textSize="20sp"
@@ -50,7 +50,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
-                android:text="Instructions"
+                android:text="@string/instructions1"
                 android:lines="5"
                 android:maxLines="15"
                 android:gravity="center"
@@ -64,7 +64,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Ingredients:"
+                android:text="@string/ingredients"
                 android:textAlignment="center"
                 android:id="@+id/ingredientsLabel"
                 android:textSize="20sp"
@@ -103,31 +103,11 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="9"
                     android:layout_marginTop="10dp"
-                    android:text="Back"
+                    android:text="@string/back"
                     android:id="@+id/btnRecipeDetailsCancel"
                     android:layout_below="@+id/relativeLayoutRecipeDetails1"
                     android:background="@drawable/button"
                     android:textColor="#fff"/>
-               <!-- <Button
-                    android:layout_width="0dip"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="3"
-                    android:layout_marginTop="10dp"
-                    android:text="DELETE"
-                    android:id="@+id/btnRecipeDetailsDelete"
-                    android:layout_below="@+id/relativeLayoutRecipeDetails1"
-                    android:background="@drawable/cancel_btn"
-                    android:textColor="#fff"/>
-                <Button
-                    android:layout_width="0dip"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="3"
-                    android:layout_marginTop="10dp"
-                    android:text="Edit"
-                    android:layout_toRightOf="@+id/btnRecipeDetailsDelete"
-                    android:id="@+id/btnRecipeDetailsEdit"
-                    android:background="@drawable/confirm_btn"
-                    android:textColor="#fff"/>-->
 
             </LinearLayout>
         </RelativeLayout>

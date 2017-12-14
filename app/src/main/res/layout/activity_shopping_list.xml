@@ -14,7 +14,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="40dip"
-        android:text="Shopping List"
+        android:text="@string/shoppingList"
         android:background="#000"
         android:textColor="#fff"
         android:id="@+id/titleShoppingList"
@@ -27,7 +27,7 @@
         android:id="@+id/editText"
         android:textAlignment="center"
         android:background="@drawable/shadowpurple"
-        android:hint="Add item"
+        android:hint="@string/addItem"
         android:padding="20dp"
         android:maxLines="2"
         android:layout_below="@id/titleShoppingList"
@@ -51,7 +51,7 @@
             android:layout_width="0dip"
             android:layout_weight=".5"
             android:id="@+id/btnBack"
-            android:text="Back"
+            android:text="@string/back"
             android:layout_toLeftOf="@+id/btnAdd"
             android:background="@drawable/button"
             android:textColor="#fff"/>
@@ -61,7 +61,7 @@
             android:layout_weight=".5"
             android:layout_alignParentRight="true"
             android:id="@+id/btnAdd"
-            android:text="Add"
+            android:text="@string/add"
             android:background="@drawable/confirm_btn"
             android:textColor="#fff"
             />

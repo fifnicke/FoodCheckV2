@@ -16,7 +16,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="40dip"
-            android:text="Select Meal"
+            android:text="@string/selectMeal"
             android:background="#000"
             android:textColor="#fff"
             android:id="@+id/title"
@@ -28,7 +28,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/shadowpurple"
-            android:hint="Type to filtrate"
+            android:hint="@string/filtrate"
             android:textAlignment="center"
             android:inputType="textCapSentences"/>
         <android.support.v7.widget.RecyclerView

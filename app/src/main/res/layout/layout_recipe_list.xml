@@ -14,7 +14,7 @@
         android:id="@+id/recipeListName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Placeholder name"
+        android:text="@string/plName"
         android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
         />
 

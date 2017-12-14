@@ -23,7 +23,7 @@
                 android:layout_width="0dip"
                 android:layout_height="match_parent"
                 android:layout_weight=".6"
-                android:text="Name"
+                android:text="@string/nameLabel"
                 android:padding="12dp"
                 android:gravity="center"
                 android:textAlignment="viewStart"
