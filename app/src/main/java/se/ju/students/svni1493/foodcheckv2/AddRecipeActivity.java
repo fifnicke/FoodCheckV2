@@ -334,7 +334,7 @@ public class AddRecipeActivity extends AppCompatActivity {
                     String day = "placeholderDay";
                     String name = addRecipeName.getText().toString();
                     String instructions = addRecipeInstructions.getText().toString();
-                    String href = "www";
+                    String href = "";
 
                     if(!TextUtils.isEmpty(name)){
 
@@ -359,7 +359,7 @@ public class AddRecipeActivity extends AppCompatActivity {
                 String name = addRecipeName.getText().toString();
                 String instructions = addRecipeInstructions.getText().toString();
                 String day = "placeholderDay";
-                String href = "www";
+                String href = "";
                 if(!TextUtils.isEmpty(name)){
 
                     Meal meal = new Meal(id, name, instructions, arrayList,selectedUrl, day, href);
@@ -386,7 +386,7 @@ public class AddRecipeActivity extends AppCompatActivity {
                         String day = "placeholderDay";
                         String name = addRecipeName.getText().toString();
                         String instructions = addRecipeInstructions.getText().toString();
-                        String href = "www";
+                        String href = "";
 
                         if(!TextUtils.isEmpty(name)){
 

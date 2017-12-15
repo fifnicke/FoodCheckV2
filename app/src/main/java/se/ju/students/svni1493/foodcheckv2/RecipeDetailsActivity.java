@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -43,7 +44,7 @@ public class RecipeDetailsActivity extends AppCompatActivity {
     Button btnRecipeDetailsCancel;
             //btnRecipeDetailsEdit, btnRecipeDetailsDelete;
     ListView recipeDetailsIngredientListView;
-    TextView recipeDetailsInstructions, recipeDetailsName;
+    TextView recipeDetailsInstructions, recipeDetailsName, urlLabel, urlLink,instructionslabel;
     ImageView recipeDetailsImage;
 
     private String selectedName;
@@ -65,16 +66,21 @@ public class RecipeDetailsActivity extends AppCompatActivity {
 
     private DatabaseReference listRef;
 
+    public String linkUrl = "http://www.google.com";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe_details);
 
+        instructionslabel = (TextView) findViewById(R.id.instructionslabel);
         recipeDetailsInstructions = (TextView) findViewById(R.id.recipeDetailsInstructions);
         recipeDetailsName = (TextView) findViewById(R.id.recipeDetailsName);
         recipeDetailsImage = (ImageView) findViewById(R.id.recipeDetailsImage);
         btnRecipeDetailsCancel = (Button) findViewById(R.id.btnRecipeDetailsCancel);
         recipeDetailsIngredientListView = (ListView) findViewById(R.id.recipeDetailsIngredientListView);
+        urlLabel = (TextView) findViewById(R.id.urlLabel);
+        urlLink = (TextView) findViewById(R.id.urlLink);
 
         mAuth = FirebaseAuth.getInstance();
         mFirebaseDatabase = FirebaseDatabase.getInstance();
@@ -119,6 +125,20 @@ public class RecipeDetailsActivity extends AppCompatActivity {
                     recipeDetailsName.setText(meal.getMealName());
                     Glide.with(getApplicationContext()).load(meal.getMealImageUrl()).into(recipeDetailsImage);
                     recipeDetailsInstructions.setText(meal.getMealInstructions());
+                    if(!meal.hRef.equals("")){
+                        linkUrl = meal.hRef;
+                        urlLink.setText(meal.hRef);
+                        recipeDetailsInstructions.setVisibility(View.GONE);
+                        instructionslabel.setVisibility(View.GONE);
+                        urlLabel.setVisibility(View.VISIBLE);
+                        urlLink.setVisibility(View.VISIBLE);
+                    }else {
+                        recipeDetailsInstructions.setVisibility(View.VISIBLE);
+                        instructionslabel.setVisibility(View.VISIBLE);
+                        urlLabel.setVisibility(View.GONE);
+                        urlLink.setVisibility(View.GONE);
+                    }
+
                 }
             }
 
@@ -136,6 +156,14 @@ public class RecipeDetailsActivity extends AppCompatActivity {
                 // Disallow the touch request for parent scroll on touch of child view
                 v.getParent().requestDisallowInterceptTouchEvent(true);
                 return false;
+            }
+        });
+        urlLink.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Uri uri = Uri.parse(linkUrl);
+                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                startActivity(intent);
             }
         });
 

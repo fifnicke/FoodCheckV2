@@ -95,6 +95,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                         mAuth = FirebaseAuth.getInstance();
                         FirebaseUser user = mAuth.getCurrentUser();
                         userID = user.getUid();
+                        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("users/"+ userID +"/Recipes").child(meal.getMealId());
+                        databaseReference.removeValue();
 
                         meals.clear();
                         testLista = new ArrayList<>();
@@ -109,6 +111,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
                         Log.d("Dagar", weekDays.toString());
                         DatabaseReference myRef = FirebaseDatabase.getInstance().getReference("users/"+ userID +"/Mealplan");
+
                         myRef.addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -168,7 +171,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
         return meals.size();
     }
-    //setting the items in the recycleview
+    //setting the items in the s
     class ViewHolder extends RecyclerView.ViewHolder {
 
         public TextView textViewName;

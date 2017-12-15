@@ -89,13 +89,36 @@
                     android:id="@+id/recipeDetailsIngredientListView"/>
             </LinearLayout>
 
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/url"
+                android:textAlignment="center"
+                android:id="@+id/urlLabel"
+                android:textSize="20sp"
+                android:padding="2dp"
+                android:ems="10"
+                android:textColor="#000"
+                android:layout_below="@+id/recipeDetailsLinearLayout"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="placeholder"
+                android:textAlignment="center"
+                android:id="@+id/urlLink"
+                android:textSize="15sp"
+                android:padding="2dp"
+                android:ems="10"
+                android:textColor="#1a0dab"
+                android:layout_below="@+id/urlLabel"/>
+
 
             <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:weightSum="9"
-                android:layout_below="@+id/recipeDetailsLinearLayout">
+                android:layout_below="@+id/urlLink">
 
 
                 <Button
@@ -105,7 +128,7 @@
                     android:layout_marginTop="10dp"
                     android:text="@string/back"
                     android:id="@+id/btnRecipeDetailsCancel"
-                    android:layout_below="@+id/relativeLayoutRecipeDetails1"
+                    android:layout_below="@+id/urlLabel"
                     android:background="@drawable/button"
                     android:textColor="#fff"/>
 

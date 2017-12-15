@@ -12,6 +12,7 @@
     <string name="back">BACK</string>
     <string name="add">ADD</string>
     <string name="nameLabel">Name</string>
+    <string name="url">Url:</string>
     #AddRecipie
 
     <string name="recipeDetails">Recipe Details</string>
