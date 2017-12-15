@@ -57,7 +57,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
         return viewHolder;
     }
-
+    //actions for clicking items in recycleview
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
 
@@ -70,7 +70,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         holder.linearLayoutRecycleView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //Toast.makeText(context, "You clicked " + meal.getMealName(), Toast.LENGTH_LONG).show();
                 Intent recipeDetailsIntent = new Intent(context, RecipeDetailsActivity.class);
                 recipeDetailsIntent.putExtra("id", meal.getMealId());
                 recipeDetailsIntent.putExtra("name", meal.getMealName());
@@ -80,8 +79,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         holder.linearLayoutRecycleView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
-                //Toast.makeText(context, "You Longclicked " + meal.getMealName(), Toast.LENGTH_LONG).show();
-                //pass the 'context' here
                 AlertDialog.Builder alertDialog = new AlertDialog.Builder(view.getContext());
                 alertDialog.setTitle(meal.getMealName());
                 alertDialog.setMessage("Do you want to edit or delete " + meal.getMealName()+"?");
@@ -95,11 +92,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
 
-
                         mAuth = FirebaseAuth.getInstance();
                         FirebaseUser user = mAuth.getCurrentUser();
                         userID = user.getUid();
-
 
                         meals.clear();
                         testLista = new ArrayList<>();
@@ -138,11 +133,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                         MealPlanIdRef.setValue("Select Meal");
                                     }
                                 }
-
-
-
                             }
-
                             @Override
                             public void onCancelled(DatabaseError error) {
                                 // Failed to read value
@@ -177,7 +168,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
         return meals.size();
     }
-
+    //setting the items in the recycleview
     class ViewHolder extends RecyclerView.ViewHolder {
 
         public TextView textViewName;

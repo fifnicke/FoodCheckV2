@@ -49,6 +49,7 @@ public class RecyclerSelectMealAdapter extends RecyclerView.Adapter<RecyclerSele
         return viewHolder;
     }
 
+    //actions for clicking items in recycleview
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
 
@@ -61,21 +62,17 @@ public class RecyclerSelectMealAdapter extends RecyclerView.Adapter<RecyclerSele
         holder.linearLayoutRecycleView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //Toast.makeText(context, "You clicked " + meal.getMealName(), Toast.LENGTH_LONG).show();
                 Intent backIntent = new Intent(context, MealPlanActivity.class);
                 backIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                //backIntent.putExtra("day", context.getString())
                 backIntent.putExtra("id", meal.getMealId());
                 backIntent.putExtra("name", meal.getMealName());
                 context.startActivity(backIntent);
-                //lägg till flagga för att ta bort från  backstack
             }
         });
         holder.linearLayoutRecycleView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
-                //Toast.makeText(context, "You Longclicked " + meal.getMealName(), Toast.LENGTH_LONG).show();
-                //pass the 'context' here
+
                 AlertDialog.Builder alertDialog = new AlertDialog.Builder(view.getContext());
                 alertDialog.setTitle(meal.getMealName());
                 alertDialog.setMessage("Do you want to edit or delete " + meal.getMealName()+"?");
@@ -85,26 +82,10 @@ public class RecyclerSelectMealAdapter extends RecyclerView.Adapter<RecyclerSele
                         dialog.cancel();
                     }
                 });
-                /*alertDialog.setNegativeButton("DELETE", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        Toast.makeText(context, "Fix delete func " + meal.getMealName(), Toast.LENGTH_LONG).show();
 
-                        mAuth = FirebaseAuth.getInstance();
-                        FirebaseUser user = mAuth.getCurrentUser();
-                        userID = user.getUid();
-                        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("users/"+ userID +"/Recipes").child(meal.getMealId());
-                        databaseReference.removeValue();
-                        meals.clear();
-                        // DO SOMETHING HERE
-
-                    }
-                });*/
                 alertDialog.setNeutralButton("CHANGE MEAL", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        //Toast.makeText(context, "Change meal" + meal.getMealName(), Toast.LENGTH_LONG).show();
-                        //Boolean edit = true;
                         Intent addRecipeIntent = new Intent(context, AddRecipeActivity.class);
                         addRecipeIntent.putExtra("id", meal.getMealId());
                         addRecipeIntent.putExtra("name", meal.getMealName());
@@ -126,7 +107,7 @@ public class RecyclerSelectMealAdapter extends RecyclerView.Adapter<RecyclerSele
 
         return meals.size();
     }
-
+    //setting the items in the recycleview
     class ViewHolder extends RecyclerView.ViewHolder {
 
         public TextView textViewName;

@@ -49,16 +49,13 @@ public class RecipeList extends  ArrayAdapter<Meal> {
         FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference storageRef = storage.getReference().child(m.getMealId());
 
-
-
-        //fix so that images gets downloaded once
+        //getting images and setting them to view
         try {
             final File localFile = File.createTempFile("images", "jpg");
             storageRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
                     Bitmap bitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
-                    //testImage = bitmap;
                     recipeListImage.setImageBitmap(bitmap);
 
                 }
@@ -68,17 +65,8 @@ public class RecipeList extends  ArrayAdapter<Meal> {
                 }
             });
         } catch (IOException e ) {}
-       /* final long ONE_MEGABYTE = 1024 * 1024;
-        storageRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
-            @Override
-            public void onSuccess(byte[] bytes) {
-                Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                recipeListImage.setImageBitmap(bitmap);
-            }
-        });*/
 
         recipeListName.setText(m.getMealName());
-        //recipeListImage.setImageBitmap(testImage);
 
         return listViewItem;
     }

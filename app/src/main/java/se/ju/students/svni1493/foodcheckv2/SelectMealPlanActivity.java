@@ -35,17 +35,13 @@ public class SelectMealPlanActivity extends AppCompatActivity {
     private DatabaseReference myRef;
     private String userID;
 
-    //List<Meal> meals;
-
     private EditText selectRecipeSearch;
 
     private static final String ITEM_ID = "se.ju.students.svni1493.foodcheckv2.itemid";
     private static final String ITEM_NAME = "se.ju.students.svni1493.foodcheckv2.itemname";
 
-    //Test för recycleview med glide och skit
     private RecyclerView recyclerView;
     private RecyclerView.Adapter adapter;
-    //private ProgressDialog progressDialog;
     private List<Meal> meals;
 
     private String day;
@@ -60,33 +56,30 @@ public class SelectMealPlanActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
         mFirebaseDatabase = FirebaseDatabase.getInstance();
-        //myRef = mFirebaseDatabase.getReference();
         FirebaseUser user = mAuth.getCurrentUser();
         userID = user.getUid();
         myRef = FirebaseDatabase.getInstance().getReference("users/"+ userID +"/Recipes" );
 
-        //Test för recycleview med glide och skit
         selectRecipeSearch = (EditText) findViewById(R.id.selectRecipeSearch);
 
         recyclerView = (RecyclerView) findViewById(R.id.selectRecyclerView);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        //progressDialog = new ProgressDialog(this);
         meals = new ArrayList<>();
 
 
         Intent recivedIntent = getIntent();
         //get itemId
-        day = recivedIntent.getStringExtra("day");// -1 is just the default value
-        //toastMessage(day);
+        day = recivedIntent.getStringExtra("day");
 
+        //saving day
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         SharedPreferences.Editor editor = prefs.edit();
-        editor.putString("selectedDay", day); //InputString: from the EditText
+        editor.putString("selectedDay", day);
         editor.commit();
 
-
+        //check if user is valid
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
@@ -106,7 +99,6 @@ public class SelectMealPlanActivity extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // This method is called once with the initial value and again
                 // whenever data at this location is updated.
-                //progressDialog.dismiss();
                 Log.d(TAG, "There are: " + dataSnapshot.getChildrenCount()+ " items");
 
                 meals.clear();
@@ -115,37 +107,24 @@ public class SelectMealPlanActivity extends AppCompatActivity {
                     Meal meal = mealSnapshot.getValue(Meal.class);
                     meals.add(meal);
                 }
-
                 enteredText = selectRecipeSearch.getText().toString();
                 selectRecipeSearch.addTextChangedListener(new TextWatcher() {
                     @Override
-                    public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-                        // TODO Auto-generated method stub
-                    }
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {}
 
                     @Override
-                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-                        // TODO Auto-generated method stub
-                    }
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
                     @Override
                     public void afterTextChanged(Editable s) {
-
-                        // filter your list from your input
-                        //String ssss = s.toString();
                         List<Meal> temp = new ArrayList();
                         for(Meal d: meals){
-                            //or use .equal(text) with you want equal match
-                            //use .toLowerCase() for better matches
                             if(d.getMealName().contains(s)){
                                 temp.add(d);
                             }
                         }
                         adapter = new RecyclerSelectMealAdapter(getApplicationContext(), temp);
                         recyclerView.setAdapter(adapter);
-                        //you can use runnable postDelayed like 500 ms to delay search text
                     }
                 });
 
@@ -153,16 +132,11 @@ public class SelectMealPlanActivity extends AppCompatActivity {
                     adapter = new RecyclerSelectMealAdapter(getApplicationContext(), meals);
                     recyclerView.setAdapter(adapter);
                 }
-
-                //ShoppingList shoppingAdapter = new ShoppingList(MealPlanActivity.this, shoppingItems);
-                //listView.setAdapter(shoppingAdapter);
-
             }
 
             @Override
             public void onCancelled(DatabaseError error) {
                 // Failed to read value
-                //progressDialog.dismiss();
                 Log.w(TAG, "Failed to read value.", error.toException());
             }
         });
@@ -187,7 +161,7 @@ public class SelectMealPlanActivity extends AppCompatActivity {
         }
     }
 
-    //toast
+    //toastmessage function
     private void toastMessage(String message){
         Toast.makeText(this,message,Toast.LENGTH_SHORT).show();
     }

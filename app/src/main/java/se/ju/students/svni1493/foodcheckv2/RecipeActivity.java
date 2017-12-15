@@ -11,8 +11,10 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -56,6 +58,7 @@ public class RecipeActivity extends AppCompatActivity {
     private RecyclerView.Adapter adapter;
     private List<Meal> meals;
     private DatabaseReference mDatabase;
+    private ProgressBar recipeProgressBar;
 
 
     @Override
@@ -66,6 +69,7 @@ public class RecipeActivity extends AppCompatActivity {
         btnRecipeAdd = (Button) findViewById(R.id.btnRecipeAdd);
         btnSearch = (Button) findViewById(R.id.btnSearch);
         searchBar = (EditText) findViewById(R.id.searchBar);
+        recipeProgressBar = (ProgressBar) findViewById(R.id.recipe_progressBar);
         meals = new ArrayList<>();
 
         mAuth = FirebaseAuth.getInstance();
@@ -83,6 +87,7 @@ public class RecipeActivity extends AppCompatActivity {
 
         mDatabase = FirebaseDatabase.getInstance().getReference();
 
+        //check if user is logged in user
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
@@ -95,20 +100,21 @@ public class RecipeActivity extends AppCompatActivity {
                 }
             }
         };
-
+        //Add recipe button action
         btnRecipeAdd.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 startActivity(new Intent(RecipeActivity.this, AddRecipeActivity.class));
-                //meals.clear();
-                //searchBar.setText("");
             }
         });
-
+        //Search button action
         btnSearch.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 searchWord = searchBar.getText().toString();
                 if (!searchWord.equals("")) {
                     new getRecipes().execute();
+                    btnSearch.setEnabled(false);
+                    recipeProgressBar.setVisibility(View.VISIBLE);
+                    hideSoftKeyBoard();
                 }
             }
         });
@@ -168,11 +174,13 @@ public class RecipeActivity extends AppCompatActivity {
         });
 
     }
-
+    //getting the json meals and displaying them
     public void getListFromJson(List<Meal> jsonList) {
         this.jsonList = jsonList;
         adapter = new SearchedMealRecycleViewAdapter(getApplicationContext(), this.jsonList);
         recyclerView.setAdapter(adapter);
+        btnSearch.setEnabled(true);
+        recipeProgressBar.setVisibility(View.GONE);
     }
 
     @Override
@@ -196,12 +204,20 @@ public class RecipeActivity extends AppCompatActivity {
         }
     }
 
-    //toast
+    //toast function
     private void toastMessage(String message) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
+    //hide keyboard function
+    private void hideSoftKeyBoard() {
+        InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
 
+        if(imm.isAcceptingText()) { // verify if the soft keyboard is open
+            imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+        }
+    }
 
+    //get json recipes
     class getRecipes extends AsyncTask<Void, Void, String> {
         public String search = RecipeActivity.searchWord;
         public String API_URL = "https://api.edamam.com/search?q=" + search + "&app_id=537abe49&app_key=354a93a038c88fe91d320861c43b78d3&from=0&to=10";

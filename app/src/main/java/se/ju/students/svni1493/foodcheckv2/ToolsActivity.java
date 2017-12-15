@@ -18,7 +18,7 @@ import com.google.firebase.auth.FirebaseUser;
 
 public class ToolsActivity extends AppCompatActivity {
 
-    private Button btnSignOut, btnChangeEmail, btnBack;
+    private Button btnChangeEmail, btnBack;
     private EditText mEmail;
     private ProgressBar progressBar;
 
@@ -50,12 +50,12 @@ public class ToolsActivity extends AppCompatActivity {
         btnChangeEmail = (Button) findViewById(R.id.tools_change_email);
         btnBack = (Button) findViewById(R.id.tools_back);
         mEmail = (EditText) findViewById(R.id.tools_email);
-
         progressBar = (ProgressBar) findViewById(R.id.tools_progressBar);
 
         if(progressBar != null){
             progressBar.setVisibility(View.GONE);
         }
+        //change email button action
         btnChangeEmail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -82,7 +82,7 @@ public class ToolsActivity extends AppCompatActivity {
                 }
             }
         });
-
+        //back button action
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -90,7 +90,7 @@ public class ToolsActivity extends AppCompatActivity {
             }
         });
     }
-
+    //sign out function
     public void signOut() {
         mAuth.signOut();
     }
@@ -115,10 +115,11 @@ public class ToolsActivity extends AppCompatActivity {
         }
     }
 
-    //toast
+    //toastmessage function
     private void toastMessage(String message){
         Toast.makeText(this,message,Toast.LENGTH_SHORT).show();
     }
+    //function to hide keyboard
     private void hideSoftKeyBoard() {
         InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
 

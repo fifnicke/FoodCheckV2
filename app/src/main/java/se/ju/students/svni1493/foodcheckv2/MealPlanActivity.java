@@ -94,6 +94,7 @@ public class MealPlanActivity extends AppCompatActivity {
 
         mealPlanItems = new ArrayList<>();
 
+        //actions for the different days in the mealplan
         LinearLayout app_layer_monday = (LinearLayout) findViewById (R.id.linearMonday);
         app_layer_monday.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -176,17 +177,19 @@ public class MealPlanActivity extends AppCompatActivity {
         //get itemId
         if(recivedIntent.hasExtra("id")){
             gotId = recivedIntent.getStringExtra("id");
-            addShoppingItem();
+            addMealItem();
         }
         if(recivedIntent.hasExtra("name")){
             gotName = recivedIntent.getStringExtra("name");
         }
+        //store the day
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         day = prefs.getString("selectedDay", "no id");
 
         meals = new ArrayList<>();
         dailyMeals = new ArrayList<>();
 
+        //check uf user is valid
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
@@ -241,8 +244,6 @@ public class MealPlanActivity extends AppCompatActivity {
                         }
                     }
                 }
-
-
                 if(dailyMeals.get(1) != null){
                     mondayText.setText(dailyMeals.get(1).getMealName());
                     Glide.with(getApplicationContext()).load(dailyMeals.get(1).getMealImageUrl()).into(mondayImage);
@@ -280,8 +281,8 @@ public class MealPlanActivity extends AppCompatActivity {
         });
 
         }
-
-        private void addShoppingItem(){
+        //add meal item
+        private void addMealItem(){
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
             String testDag = prefs.getString("selectedDay", "no id"); //no id: default value
             myPlanRef.child(testDag).setValue(gotId);
@@ -301,7 +302,7 @@ public class MealPlanActivity extends AppCompatActivity {
             }
         }
 
-        //toast
+        //toastmessage function
         private void toastMessage(String message){
             Toast.makeText(this,message,Toast.LENGTH_SHORT).show();
         }

@@ -68,6 +68,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mPlaceType = getResources().getStringArray(R.array.place_type);
         mPlaceTypeName = getResources().getStringArray(R.array.place_type_name);
 
+        //check map permissions
         if(ContextCompat. checkSelfPermission(MapsActivity.this, Manifest.permission.ACCESS_FINE_LOCATION ) == PackageManager.PERMISSION_GRANTED){
             Log.d(TAG, "Finding nearby stores...");
             locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
@@ -91,21 +92,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                             e.printStackTrace();
                         }
                     }
-
                     @Override
-                    public void onStatusChanged(String s, int i, Bundle bundle) {
-
-                    }
-
+                    public void onStatusChanged(String s, int i, Bundle bundle) {}
                     @Override
-                    public void onProviderEnabled(String s) {
-
-                    }
-
+                    public void onProviderEnabled(String s) {}
                     @Override
-                    public void onProviderDisabled(String s) {
-
-                    }
+                    public void onProviderDisabled(String s) {}
                 });
             }else if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)){
                 locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, new LocationListener() {
@@ -129,26 +121,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     }
 
                     @Override
-                    public void onStatusChanged(String s, int i, Bundle bundle) {
-
-                    }
-
+                    public void onStatusChanged(String s, int i, Bundle bundle) {}
                     @Override
-                    public void onProviderEnabled(String s) {
-
-                    }
-
+                    public void onProviderEnabled(String s) {}
                     @Override
-                    public void onProviderDisabled(String s) {
-
-                    }
+                    public void onProviderDisabled(String s) {}
                 });
             }
         }else {
             requestMapsPermission();
         }
     }
-
+    //request the map permission
     private void requestMapsPermission(){
         if(ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)){
             new AlertDialog.Builder(this)
@@ -172,6 +156,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             ActivityCompat.requestPermissions(this,new String[] {Manifest.permission.ACCESS_FINE_LOCATION}, MAPS_PERMISSION_CODE);
         }
     }
+    //map permisson result
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults){
         if(requestCode == MAPS_PERMISSION_CODE){
@@ -240,32 +225,23 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         }
 
                         @Override
-                        public void onStatusChanged(String s, int i, Bundle bundle) {
-
-                        }
-
+                        public void onStatusChanged(String s, int i, Bundle bundle) {}
                         @Override
-                        public void onProviderEnabled(String s) {
-
-                        }
-
+                        public void onProviderEnabled(String s) {}
                         @Override
-                        public void onProviderDisabled(String s) {
-
-                        }
+                        public void onProviderDisabled(String s) {}
                     });
                 }
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-
             } else {
                 Toast.makeText(this, "Permission DENIED", Toast.LENGTH_SHORT).show();
             }
         }
     }
-
+    //getting places to display on map
     private String downloadUrl(String strUrl) throws IOException{
         String data = "";
         InputStream iStream = null;
@@ -366,7 +342,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         }
     }
-
+    //find stores
     public void findPlaces(Location location) {
 
         double longitude = location.getLongitude();

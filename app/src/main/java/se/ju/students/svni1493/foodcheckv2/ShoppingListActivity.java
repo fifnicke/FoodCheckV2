@@ -68,6 +68,7 @@ public class ShoppingListActivity extends AppCompatActivity {
         userID = user.getUid();
         myRef = FirebaseDatabase.getInstance().getReference("users/"+ userID +"/ShoppingList" );
 
+        //check if user is valid
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
@@ -104,6 +105,7 @@ public class ShoppingListActivity extends AppCompatActivity {
                 Log.w(TAG, "Failed to read value.", error.toException());
             }
         });
+        //actions for longclicking in shopping list
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -113,6 +115,7 @@ public class ShoppingListActivity extends AppCompatActivity {
             }
         });
 
+        //add to database button action
         btnAddToDatabase.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -120,6 +123,7 @@ public class ShoppingListActivity extends AppCompatActivity {
 
             }
         });
+        //cancel button action
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -129,6 +133,7 @@ public class ShoppingListActivity extends AppCompatActivity {
 
     }
 
+    //add shopping item
     private void addShoppingItem(){
         String name = foodText.getText().toString();
         if(!TextUtils.isEmpty(name)){
@@ -142,18 +147,21 @@ public class ShoppingListActivity extends AppCompatActivity {
 
     }
 
+    //updating the shopping item
     private boolean updateName(String id, String name){
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("users/"+ userID +"/ShoppingList").child(id);
         ShoppingItem shoppingItem = new ShoppingItem(id,name);
         databaseReference.setValue(shoppingItem);
         return true;
     }
+    //deleting the shopping item
     private boolean deleteItem(String id) {
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("users/"+ userID +"/ShoppingList").child(id);
         databaseReference.removeValue();
         return true;
     }
 
+    //alertdialog
     private void displayEditDialog(final String itemID, String itemName){
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
         LayoutInflater inflater = getLayoutInflater();
@@ -178,7 +186,6 @@ public class ShoppingListActivity extends AppCompatActivity {
                 }
             }
         });
-
         btnDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -203,7 +210,7 @@ public class ShoppingListActivity extends AppCompatActivity {
         }
     }
 
-    //toast
+    //toastmessage function
     private void toastMessage(String message){
         Toast.makeText(this,message,Toast.LENGTH_SHORT).show();
     }

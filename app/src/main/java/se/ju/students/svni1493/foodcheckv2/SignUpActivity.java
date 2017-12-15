@@ -42,19 +42,20 @@ public class SignUpActivity extends AppCompatActivity {
         mPassword = (EditText) findViewById(R.id.password);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
 
+        //reset password button action
         btnResetPassword.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
                 startActivity(new Intent(SignUpActivity.this, ResetPasswordActivity.class));
             }
         });
+        //sign up button action
         btnSignUp.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
                 hideSoftKeyBoard();
                 String email = mEmail.getText().toString().trim();
                 String password = mPassword.getText().toString().trim();
-
                 if(TextUtils.isEmpty(email)){
                    toastMessage("Enter Your Email Adress!");
                    return;
@@ -64,7 +65,6 @@ public class SignUpActivity extends AppCompatActivity {
                     return;
                 }
                 progressBar.setVisibility(View.VISIBLE);
-
                 mAuth.createUserWithEmailAndPassword(email, password)
                         .addOnCompleteListener(SignUpActivity.this, new OnCompleteListener<AuthResult>() {
                             @Override
@@ -85,6 +85,7 @@ public class SignUpActivity extends AppCompatActivity {
 
             }
         });
+        //sign in button action
         btnSignIn.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
@@ -97,10 +98,11 @@ public class SignUpActivity extends AppCompatActivity {
         super.onResume();
         progressBar.setVisibility(View.GONE);
     }
-    //toast
+    //toastmessage function
     private void toastMessage(String message){
         Toast.makeText(this,message,Toast.LENGTH_SHORT).show();
     }
+    //hide keyboard function
     private void hideSoftKeyBoard() {
         InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
 

@@ -28,11 +28,9 @@ public class ShoppingList extends ArrayAdapter<ShoppingItem> {
         View listViewItem = inflater.inflate(R.layout.layout_shopping_item_list, null, true);
 
         TextView textViewName = (TextView) listViewItem.findViewById(R.id.textViewName);
-        //TextView textViewId = (TextView) listViewItem.findViewById(R.id.textViewId);
 
         ShoppingItem si = shoppingItems.get(position);
         textViewName.setText(si.getItemName());
-        //textViewId.setText(si.getItemId());
 
         return listViewItem;
     }

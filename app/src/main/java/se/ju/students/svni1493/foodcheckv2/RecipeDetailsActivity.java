@@ -73,14 +73,11 @@ public class RecipeDetailsActivity extends AppCompatActivity {
         recipeDetailsInstructions = (TextView) findViewById(R.id.recipeDetailsInstructions);
         recipeDetailsName = (TextView) findViewById(R.id.recipeDetailsName);
         recipeDetailsImage = (ImageView) findViewById(R.id.recipeDetailsImage);
-       // btnRecipeDetailsEdit = (Button) findViewById(R.id.btnRecipeDetailsEdit);
         btnRecipeDetailsCancel = (Button) findViewById(R.id.btnRecipeDetailsCancel);
-        //btnRecipeDetailsDelete = (Button) findViewById(R.id.btnRecipeDetailsDelete);
         recipeDetailsIngredientListView = (ListView) findViewById(R.id.recipeDetailsIngredientListView);
 
         mAuth = FirebaseAuth.getInstance();
         mFirebaseDatabase = FirebaseDatabase.getInstance();
-        //myRef = mFirebaseDatabase.getReference();
         FirebaseUser user = mAuth.getCurrentUser();
         userID = user.getUid();
 
@@ -105,7 +102,9 @@ public class RecipeDetailsActivity extends AppCompatActivity {
         selectedID = recivedIntent.getStringExtra("id");// -1 is just the default value
         //get name
         selectedName = recivedIntent.getStringExtra("name");
+
         myRef = FirebaseDatabase.getInstance().getReference("users/"+ userID +"/Recipes/" +selectedID+"" );
+
         // Read from the database
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -121,16 +120,6 @@ public class RecipeDetailsActivity extends AppCompatActivity {
                     Glide.with(getApplicationContext()).load(meal.getMealImageUrl()).into(recipeDetailsImage);
                     recipeDetailsInstructions.setText(meal.getMealInstructions());
                 }
-
-                //meals.clear();
-
-               /* for(DataSnapshot mealSnapshot: dataSnapshot.getChildren()){
-                    Meal meal = mealSnapshot.getValue(Meal.class);
-                    //meals.add(meal);
-                }*/
-
-                //RecipeList recipeAdapter = new RecipeList(RecipeActivity.this, meals);
-                //recipeListView.setAdapter(recipeAdapter);
             }
 
             @Override
@@ -139,6 +128,7 @@ public class RecipeDetailsActivity extends AppCompatActivity {
                 Log.w(TAG, "Failed to read value.", error.toException());
             }
         });
+        //fix scroll
         recipeDetailsIngredientListView.setOnTouchListener(new View.OnTouchListener() {
             // Setting on Touch Listener for handling the touch inside ScrollView
             @Override
@@ -164,70 +154,24 @@ public class RecipeDetailsActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-            }
-
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
             @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-            }
-
+            public void onChildRemoved(DataSnapshot dataSnapshot) {}
             @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-            }
-
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
             @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
+            public void onCancelled(DatabaseError databaseError) {}
         });
 
-
+        //cancel button action
         btnRecipeDetailsCancel.setOnClickListener(new View.OnClickListener(){
             public void onClick(View view){
                 finish();
             }
         });
-       /* btnRecipeDetailsDelete.setOnClickListener(new View.OnClickListener(){
-            public void onClick(View view){
-                //write code for deletion of recipe
-                //mDatabaseHelper.deleteMeal(selectedID,selectedName);
-                finish();
-            }
-        });*/
-      /*  btnRecipeDetailsEdit.setOnClickListener(new View.OnClickListener(){
-            public void onClick(View view){
-                //write code for editing of recipe
-            }
-        });*/
     }
 
-    public void updateInfo(){
-/*
-        recipeDetailsName.setText(meal.getName());
-        recipeDetailsInstructions.setText(meal.getIngredients());//gets instructions for some reason
-        ingredients = meal.getInstructions();
-        ingredientArray = convertStringToArray(ingredients);
-        Bitmap convertImage = BitmapFactory.decodeByteArray(meal.getImage(), 0, meal.getImage().length);
-        recipeDetailsImage.setImageBitmap(convertImage);*/
-    }
-
-    private void populateListView() {
-
-        ListAdapter adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, ingredientArray);
-        recipeDetailsIngredientListView.setAdapter(adapter);
-
-    }
-    public static String strSeparator = "__,__";
-    //function to convert the string of ingredients to an array again
-    public static String[] convertStringToArray(String str){
-        String[] arr = str.split(strSeparator);
-        return arr;
-    }
-
-    //toast
+    //toastmessage function
     private void toastMessage(String message){
         Toast.makeText(this,message,Toast.LENGTH_SHORT).show();
     }

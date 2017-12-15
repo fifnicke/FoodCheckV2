@@ -48,6 +48,7 @@ public class SearchedMealRecycleViewAdapter extends RecyclerView.Adapter<Searche
         return viewHolder;
     }
 
+    //actions for clicking items in recycleview
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         final Meal meal = meals.get(position);
@@ -59,7 +60,6 @@ public class SearchedMealRecycleViewAdapter extends RecyclerView.Adapter<Searche
         holder.linearLayoutRecycleView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //Toast.makeText(context, "You clicked " + meal.getMealName(), Toast.LENGTH_LONG).show();
                 Intent recipeDetailsIntent = new Intent(context, SearchedMealDetailsActivity.class);
                 recipeDetailsIntent.putExtra("id", meal.getMealId());
                 recipeDetailsIntent.putExtra("name", meal.getMealName());
@@ -70,60 +70,15 @@ public class SearchedMealRecycleViewAdapter extends RecyclerView.Adapter<Searche
                 context.startActivity(recipeDetailsIntent);
             }
         });
-        holder.linearLayoutRecycleView.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View view) {
-                //Toast.makeText(context, "You Longclicked " + meal.getMealName(), Toast.LENGTH_LONG).show();
-                //pass the 'context' here
-               /* AlertDialog.Builder alertDialog = new AlertDialog.Builder(view.getContext());
-                alertDialog.setTitle(meal.getMealName());
-                alertDialog.setMessage("Do you want to edit or delete " + meal.getMealName()+"?");
-                alertDialog.setPositiveButton("CANCEL", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                });
-                alertDialog.setNegativeButton("DELETE", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        Toast.makeText(context, "Fix delete func " + meal.getMealName(), Toast.LENGTH_LONG).show();
-
-                        mAuth = FirebaseAuth.getInstance();
-                        FirebaseUser user = mAuth.getCurrentUser();
-                        userID = user.getUid();
-                        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("users/"+ userID +"/Recipes").child(meal.getMealId());
-                        databaseReference.removeValue();
-                        meals.clear();
-                        // DO SOMETHING HERE
-
-                    }
-                });
-                alertDialog.setNeutralButton("EDIT", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        Toast.makeText(context, "Edit recipe " + meal.getMealName(), Toast.LENGTH_LONG).show();
-                        Boolean edit = true;
-                        Intent addRecipeIntent = new Intent(context, AddRecipeActivity.class);
-                        addRecipeIntent.putExtra("id", meal.getMealId());
-                        addRecipeIntent.putExtra("name", meal.getMealName());
-                        addRecipeIntent.putExtra("url", meal.getMealImageUrl());
-                        addRecipeIntent.putExtra("edit", true);
-                        context.startActivity(addRecipeIntent);
-                    }
-                });
-
-                AlertDialog dialog = alertDialog.create();
-                dialog.show();*/
-                return true;
-            }
-        });
     }
 
+    //ammount of items
     @Override
     public int getItemCount() {
         return meals.size();
     }
+
+    //setting name and image to card
     class ViewHolder extends RecyclerView.ViewHolder {
         public TextView textViewName;
         public ImageView imageView;

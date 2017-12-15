@@ -66,6 +66,7 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         mListView = (ListView) findViewById(R.id.shoppingListList);
@@ -83,26 +84,32 @@ public class MainActivity extends AppCompatActivity
         myMealRef = FirebaseDatabase.getInstance().getReference("users/"+ userID +"/Recipes" );
         myWeekRef = FirebaseDatabase.getInstance().getReference("users/"+ userID);
 
+        //drawer
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         final ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
+        //date
         SimpleDateFormat sdf = new SimpleDateFormat("EEEE");
         Date d = new Date();
         String dayOfTheWeek = sdf.format(d);
+
         meals = new ArrayList<>();
         dailyMeals = new ArrayList<>();
 
-
+        //navview
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         View headerView = navigationView.getHeaderView(0);
+
         mUserText = (TextView)headerView.findViewById(R.id.userName);
         mUserText.setText(user.getEmail());
+
         final LinearLayout dailyMealMain = (LinearLayout) findViewById (R.id.dailyMealMain);
 
+        //check is user is valid
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
@@ -161,7 +168,7 @@ public class MainActivity extends AppCompatActivity
                 Log.w(TAG, "Failed to read value.", error.toException());
             }
         });
-        DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
+        //add mealplan to database
         myWeekRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
@@ -225,14 +232,11 @@ public class MainActivity extends AppCompatActivity
                             break;
                     }
                 }
-
                 meals.clear();
-
                 for (DataSnapshot mealSnapshot : dataSnapshot.child("Recipes").getChildren()) {
                     Meal meal = mealSnapshot.getValue(Meal.class);
                     meals.add(meal);
                 }
-
                 for(Meal meal: meals){
                     if(meal.getMealId().equals(todayM)){
                         dM = meal;
@@ -257,6 +261,7 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
+        //action for clicking the daily meal
         dailyMealMain.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -274,6 +279,7 @@ public class MainActivity extends AppCompatActivity
         super.onResume();
     }
 
+    //close drawer on back pressed
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -285,23 +291,15 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
         int id = item.getItemId();
-
         if (id == R.id.action_settings) {
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
+    //navigation for the drawer
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -352,7 +350,7 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    //toast
+    //toastmessage function
     private void toastMessage(String message){
         Toast.makeText(this,message,Toast.LENGTH_SHORT).show();
     }

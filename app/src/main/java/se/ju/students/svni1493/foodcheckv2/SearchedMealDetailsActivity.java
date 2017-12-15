@@ -76,10 +76,10 @@ public class SearchedMealDetailsActivity extends AppCompatActivity {
         userID = user.getUid();
 
         myRef = FirebaseDatabase.getInstance().getReference("users/"+ userID +"/Recipes" );
-        //myRef = mFirebaseDatabase.getReference();
 
         ingredientsItems = new ArrayList<>();
 
+        //check if user is valid
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
@@ -92,16 +92,18 @@ public class SearchedMealDetailsActivity extends AppCompatActivity {
                 }
             }
         };
+        //cancel button action
         btnSearchedRecipieDetailsCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 finish();
             }
         });
+
+        //edit button action
         btnSearchedRecipieDetailsEdit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 String id = myRef.push().getKey();
                 String name = selectedName;
                 String instructions = selectedHref;
@@ -111,15 +113,14 @@ public class SearchedMealDetailsActivity extends AppCompatActivity {
                 if(!TextUtils.isEmpty(name)){
                     Meal meal = new Meal(id, name, instructions, arrayList,image, day, href);
                     myRef.child(id).setValue(meal);
-                    //toastMessage("Added "+ name + " to firebase!");
                     finish();
                 }else {
-                    //toastMessage("Something went wrong!");
+                    toastMessage("Something went wrong! Try again!");
                 }
             }
         });
 
-
+        //fix for scrolling
         searchedRecipeDetailsIngredientListView.setOnTouchListener(new View.OnTouchListener() {
             // Setting on Touch Listener for handling the touch inside ScrollView
             @Override
@@ -129,6 +130,7 @@ public class SearchedMealDetailsActivity extends AppCompatActivity {
                 return false;
             }
         });
+
         //get the intent extras
         Intent recivedIntent = getIntent();
         //get itemId
@@ -144,16 +146,11 @@ public class SearchedMealDetailsActivity extends AppCompatActivity {
 
 
         arrayList = getIntent().getStringArrayListExtra("list");
-        //toastMessage(arrayList.toString());
 
-
-        //myRef = FirebaseDatabase.getInstance().getReference("users/"+ userID +"/Recipes/" +selectedID+"" );
-
-        //final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, testList);
-        //searchedRecipeDetailsIngredientListView.setAdapter(arrayAdapter);
         updateView();
 
     }
+    //updating the view
     private void updateView(){
         searchedRecipeDetailsName.setText(selectedName);
         searchedRecipeDetailsInstructions.setText(selectedHref);
@@ -163,7 +160,7 @@ public class SearchedMealDetailsActivity extends AppCompatActivity {
         searchedRecipeDetailsIngredientListView.setAdapter(adapter);
 
     }
-    //toast
+    //toastmessage function
     private void toastMessage(String message){
         Toast.makeText(this,message,Toast.LENGTH_SHORT).show();
     }

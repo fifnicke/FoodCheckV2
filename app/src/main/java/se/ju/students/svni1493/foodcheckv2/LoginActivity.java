@@ -54,6 +54,7 @@ public class LoginActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
 
+        //sign in action
         btnSignIn.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
@@ -92,12 +93,14 @@ public class LoginActivity extends AppCompatActivity {
 
             }
         });
+        //register action
         btnRegister.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(LoginActivity.this,SignUpActivity.class));
             }
         });
+        //forgot password action
         btnForgotPass.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
@@ -106,10 +109,11 @@ public class LoginActivity extends AppCompatActivity {
         });
 
     }
-    //toast
+    //toastmessage function
     private void toastMessage(String message){
         Toast.makeText(this,message,Toast.LENGTH_SHORT).show();
     }
+    //hide keyboard function
     private void hideSoftKeyBoard() {
         InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
 

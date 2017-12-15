@@ -95,13 +95,13 @@ public class AddRecipeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_recipe);
 
+
         addRecipeName = (EditText) findViewById(R.id.addRecipeName);
         addRecipeInstructions = (EditText) findViewById(R.id.addRecipeInstructions);
         addRecipeImageButton = (Button) findViewById(R.id.addRecipeImageButton);
         btnRecipeCancel = (Button) findViewById(R.id.btnRecipeCancel);
         btnRecipeSave = (Button) findViewById(R.id.btnRecipeSave);
         addRecipeImage = (ImageView) findViewById(R.id.addRecipeImage);
-
         addIngredientText = (EditText) findViewById(R.id.addIngredientText);
         btnIngredientAdd = (Button) findViewById(R.id.btnIngredientAdd);
         ingredientListView = (ListView) findViewById(R.id.ingredientListView);
@@ -120,12 +120,12 @@ public class AddRecipeActivity extends AppCompatActivity {
         selectedID = recivedIntent.getStringExtra("id");
         //get name
         selectedName = recivedIntent.getStringExtra("name");
-
+        //get url
         selectedUrl = recivedIntent.getStringExtra("url");
         if(recivedIntent.hasExtra("edit")){
             editMode = recivedIntent.getExtras().getBoolean("edit");
         }
-
+        //check if user is logged in
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
@@ -138,7 +138,7 @@ public class AddRecipeActivity extends AppCompatActivity {
                 }
             }
         };
-
+        //fix for scrolling
         ingredientListView.setOnTouchListener(new View.OnTouchListener() {
             // Setting on Touch Listener for handling the touch inside ScrollView
             @Override
@@ -176,7 +176,7 @@ public class AddRecipeActivity extends AppCompatActivity {
             }
         });
 
-
+        //save button action
         btnRecipeSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -185,6 +185,7 @@ public class AddRecipeActivity extends AppCompatActivity {
 
             }
         });
+        //cancel button action
         btnRecipeCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -194,9 +195,11 @@ public class AddRecipeActivity extends AppCompatActivity {
 
         onbtnIngredientAddClick();
 
+        //adding ingredients to the view
         adapter = new ArrayAdapter<String>(AddRecipeActivity.this, android.R.layout.simple_list_item_1,arrayList);
         ingredientListView.setAdapter(adapter);
 
+        //actions for longclick in the list
         ingredientListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -225,7 +228,7 @@ public class AddRecipeActivity extends AppCompatActivity {
         });
 
 
-        // Read from the database
+        // Read ingredients from the database
         listRef = myMealRef.child("mealIngredients");
         listRef.addChildEventListener(new ChildEventListener() {
             @Override
@@ -235,38 +238,18 @@ public class AddRecipeActivity extends AppCompatActivity {
                     arrayList.add(value);
                     adapter.notifyDataSetChanged();
                 }
-
             }
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {}
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
 
             @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
+            public void onCancelled(DatabaseError databaseError) {}
         });
-
-
-
-        btnRecipeCancel.setOnClickListener(new View.OnClickListener(){
-            public void onClick(View view){
-                finish();
-            }
-        });
-
+        //add recipe action
         addRecipeImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -278,23 +261,10 @@ public class AddRecipeActivity extends AppCompatActivity {
                 }else {
                     requestStoragePermission();
                 }
-
-                /*
-                try {
-                    if (ActivityCompat.checkSelfPermission(AddRecipeActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                        ActivityCompat.requestPermissions(AddRecipeActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, PICK_IMAGE_REQUEST);
-                    } else {
-                        Intent intent = new Intent();
-                        intent.setType("image/*");
-                        intent.setAction(Intent.ACTION_PICK);
-                        startActivityForResult(Intent.createChooser(intent, "Select Image"), PICK_IMAGE_REQUEST);
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }*/
             }
         });
     }
+    //request permission for storage
     private void requestStoragePermission(){
         if(ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_EXTERNAL_STORAGE)){
             new AlertDialog.Builder(this)
@@ -333,7 +303,7 @@ public class AddRecipeActivity extends AppCompatActivity {
         }
     }
 
-
+    //add ingredient action
     public void onbtnIngredientAddClick() {
         btnIngredientAdd.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -345,11 +315,10 @@ public class AddRecipeActivity extends AppCompatActivity {
             }
         });
     }
-
+    //save the meal
     private void addMealItem(){
 
         String id = myRef.push().getKey();
-
         if(filePath != null && !editMode){
             StorageReference childRef = storageRef.child(id);
 
@@ -441,7 +410,7 @@ public class AddRecipeActivity extends AppCompatActivity {
             toastMessage("Select an image");
         }
     }
-
+    //response for image
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -458,7 +427,7 @@ public class AddRecipeActivity extends AppCompatActivity {
             }
         }
     }
-    //toast
+    //toastmessage function
     private void toastMessage(String message){
         Toast.makeText(this,message,Toast.LENGTH_SHORT).show();
     }

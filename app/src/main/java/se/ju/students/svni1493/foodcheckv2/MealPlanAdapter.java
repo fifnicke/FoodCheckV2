@@ -26,30 +26,4 @@ public class MealPlanAdapter extends ArrayAdapter<MealItem> {
         mContext = mContext;
         mResource = resource;
     }
-/*
-    @NonNull
-    @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        //get meal info
-        String name = getItem(position).getName();
-        String instructions = getItem(position).getInstructions();
-        String image = getItem(position).getImage();
-        String [] ingredients = getItem(position).getIngredients();
-
-        //create the mealItem object with the info
-        MealItem mealItem = new MealItem(name,instructions,image,ingredients);
-
-        LayoutInflater inflater = LayoutInflater.from(mContext);
-        convertView = inflater.inflate(mResource, parent, false);
-
-        TextView tvName = (TextView) convertView.findViewById(R.id.recipeName);
-        ImageView ivImage = (ImageView) convertView.findViewById(R.id.mealplanRecipeImage);
-
-        tvName.setText(name);
-        //ivImage.setImageDrawable(Drawable.createFromPath(image));
-
-        return convertView;
-
-
-    }*/
 }
